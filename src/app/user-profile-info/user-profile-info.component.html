@@ -1,0 +1,17 @@
+<div class="flex justify-start items-start p-6">
+  <div class="bg-white rounded-lg shadow-md p-6 w-72 max-w-full m-6">
+    <div class="flex flex-col items-center justify-between mb-4">
+      <h2 class="text-2xl font-extrabold text-primary-dark">{{ user.username }}</h2>
+      <p class="text-base text-gray-900 mb-2 text-center">Followers: {{ user.followersCount }}</p>
+      <div *ngIf="!isOwnProfile">
+        <button *ngIf="!isFollowing" (click)="follow()" class="py-1 px-3 bg-primary-dark text-white rounded-md hover:bg-primary focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary">
+          Follow
+        </button>
+        <button *ngIf="isFollowing" (click)="unfollow()" class="py-1 px-3 bg-red-500 text-white rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
+          Unfollow
+        </button>
+      </div>
+
+    </div>
+  </div>
+</div>

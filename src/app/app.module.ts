@@ -15,6 +15,13 @@ import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import { NavBarComponent } from './nav-bar/nav-bar.component';
 import { SearchResultsComponent } from './search-results/search-results.component';
 import { SearchBarComponent } from './search-bar/search-bar.component';
+import { BookDetailComponent } from './book-detail/book-detail.component';
+import { ProfileComponent } from './profile/profile.component';
+import { UserProfileInfoComponent } from './user-profile-info/user-profile-info.component';
+import { CriticComponent } from './critic/critic.component';
+import { CommentComponent } from './comment/comment.component';
+import { LikeComponent } from './like/like.component';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 @NgModule({
   declarations: [
@@ -22,7 +29,13 @@ import { SearchBarComponent } from './search-bar/search-bar.component';
     FeedComponent,
     NavBarComponent,
     SearchResultsComponent,
-    SearchBarComponent
+    SearchBarComponent,
+    BookDetailComponent,
+    ProfileComponent,
+    UserProfileInfoComponent,
+    CriticComponent,
+    CommentComponent,
+    LikeComponent
   ],
   imports: [
     BrowserModule,
@@ -30,7 +43,8 @@ import { SearchBarComponent } from './search-bar/search-bar.component';
     ReactiveFormsModule,
     HttpClientModule,
     AuthModule,
-    FormsModule
+    FormsModule,
+    FontAwesomeModule
   ],
   providers: [AuthService,
     AuthenticationGuard,

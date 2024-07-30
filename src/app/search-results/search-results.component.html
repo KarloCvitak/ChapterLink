@@ -1,0 +1,84 @@
+<app-nav-bar></app-nav-bar>
+
+<div class="p-6">
+  <h2 class="text-2xl font-bold mb-4">Search Results for "{{ query }}"</h2>
+
+  <!-- Filter buttons -->
+  <div class="flex space-x-4 mb-4">
+    <button (click)="filterResults('books')"
+            class="bg-primary-dark hover:bg-primary-light text-white px-4 py-2 rounded-md">
+      Books
+    </button>
+    <button (click)="filterResults('users')"
+            class="bg-primary-dark hover:bg-primary-light text-white px-4 py-2 rounded-md">
+      Users
+    </button>
+    <button (click)="filterResults('lists')"
+            class="bg-primary-dark hover:bg-primary-light text-white px-4 py-2 rounded-md">
+      Lists
+    </button>
+    <button (click)="showAllResults()"
+            class="bg-primary-dark hover:bg-primary-light text-white px-4 py-2 rounded-md">
+      All
+    </button>
+  </div>
+
+  <!-- Display filtered results based on selected filter -->
+  <div class="grid grid-cols-3 gap-8">
+    <!-- Books Column -->
+    <div *ngIf="currentFilter === 'books' || currentFilter === 'all'">
+      <h3 class="text-xl font-semibold mb-2">Books</h3>
+      <ul>
+        <li *ngIf="books.length === 0" class="mb-4">
+          <p class="text-lg text-gray-600">No books found</p>
+        </li>
+        <li *ngFor="let book of books" (click)="onSelectItem(book)" class="mb-4 flex items-start cursor-pointer hover:bg-gray-100 p-2 rounded">
+          <a class="flex items-start">
+            <!-- Display book cover -->
+            <img *ngIf="book.volumeInfo.imageLinks?.thumbnail" [src]="book.volumeInfo.imageLinks.thumbnail" alt="Book Cover" class="w-16 h-auto mr-4">
+
+            <!-- Display book details -->
+            <div>
+              <p class="text-lg font-medium">{{ book.volumeInfo.title }}</p>
+              <p class="text-sm text-gray-600">{{ book.volumeInfo.authors?.join(', ') }}</p>
+              <p class="text-sm text-gray-600">{{ book.volumeInfo.publishedDate }}</p>
+            </div>
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Users Column -->
+    <div *ngIf="currentFilter === 'users' || currentFilter === 'all'">
+      <h3 class="text-xl font-semibold mb-2">Users</h3>
+      <ul>
+        <li *ngIf="users.length === 0" class="mb-4">
+          <p class="text-lg text-gray-600">No users found</p>
+        </li>
+        <li *ngFor="let user of users" (click)="onSelectItem(user)" class="mb-2 cursor-pointer hover:bg-gray-100 p-2 rounded">
+          <!-- Display user details -->
+          <p class="text-lg font-medium">{{ user.username }}</p>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Lists Column -->
+    <div *ngIf="currentFilter === 'lists' || currentFilter === 'all'">
+      <h3 class="text-xl font-semibold mb-2">Lists</h3>
+      <ul>
+        <li *ngIf="lists.length === 0" class="mb-4">
+          <p class="text-lg text-gray-600">No lists found</p>
+        </li>
+        <li *ngFor="let list of lists" class="mb-2 cursor-pointer hover:bg-gray-100 p-2 rounded">
+          <p class="text-lg font-medium">{{ list.title }}</p>
+          <p class="text-sm text-gray-600">{{ list.DESCRIPTION }}</p>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- No results message -->
+  <div *ngIf="books.length === 0 && users.length === 0 && lists.length === 0">
+    <p class="text-lg text-gray-600">No results found for "{{ query }}"</p>
+  </div>
+</div>

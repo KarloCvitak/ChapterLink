@@ -1,0 +1,117 @@
+<app-nav-bar></app-nav-bar>
+
+<div class="flex-col bg-gray-100">
+  <app-user-profile-info></app-user-profile-info>
+
+  <div class="flex justify-start items-start p-4">
+    <div class="max-w-6xl w-full p-6 bg-white rounded-lg shadow-lg">
+      <!-- Filter Buttons -->
+      <div class="mt-6 flex justify-center space-x-4">
+        <button
+          class="px-4 py-2 rounded"
+          [ngClass]="{
+            'bg-blue-600 text-white': isActive(1),
+            'bg-blue-500 text-white hover:bg-blue-600': !isActive(1)
+          }"
+          (click)="filterBooks(1)"
+        >
+          Currently Reading
+        </button>
+        <button
+          class="px-4 py-2 rounded"
+          [ngClass]="{
+            'bg-green-600 text-white': isActive(2),
+            'bg-green-500 text-white hover:bg-green-600': !isActive(2)
+          }"
+          (click)="filterBooks(2)"
+        >
+          Read
+        </button>
+        <button
+          class="px-4 py-2 rounded"
+          [ngClass]="{
+            'bg-yellow-600 text-white': isActive(3),
+            'bg-yellow-500 text-white hover:bg-yellow-600': !isActive(3)
+          }"
+          (click)="filterBooks(3)"
+        >
+          Want to Read
+        </button>
+      </div>
+
+      <!-- Books List -->
+      <div class="mt-6">
+        <div *ngIf="books.length === 0" class="text-center text-lg text-gray-600">
+          No books found for this status
+        </div>
+        <ul *ngIf="books.length > 0" class="space-y-4">
+          <li *ngFor="let book of books"
+              (click)="onSelectBook(book)"
+              class="flex items-start cursor-pointer hover:bg-gray-100 p-2 rounded">
+            <!-- Book Cover -->
+            <img *ngIf="book.Book.cover_image"
+                 [src]="book.Book.cover_image"
+                 alt="Book Cover"
+                 class="w-16 h-auto mr-4 rounded-lg shadow-md">
+            <!-- Book Details -->
+            <div>
+              <p class="text-lg font-medium">{{ book.Book.title }}</p>
+              <p class="text-sm text-gray-600">{{ book.Book.authors }}</p>
+            </div>
+          </li>
+        </ul>
+      </div>
+
+      <!-- User Reviews -->
+      <div class="mt-6">
+        <h3 class="text-xl font-semibold mb-4">Your Reviews</h3>
+        <div *ngFor="let review of reviews" class="p-4 border rounded mb-4">
+          <ng-container *ngIf="editingReview && editingReview.critic_id === review.critic_id">
+            <!-- Edit Review -->
+            <textarea [(ngModel)]="editingReview.review_text" class="w-full p-2 border rounded mb-2" placeholder="Edit your review here"></textarea>
+            <div class="flex mb-2">
+              <ng-container *ngFor="let star of [1, 2, 3, 4, 5]">
+                <svg
+                  (click)="editingReview.rating = star"
+                  [ngClass]="{'text-yellow-500': star <= editingReview.rating, 'text-gray-300': star > editingReview.rating}"
+                  class="w-8 h-8 cursor-pointer"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path d="M9.049 2.927C9.237 2.645 9.616 2.645 9.804 2.927L11.223 5.241C11.335 5.434 11.535 5.554 11.753 5.577L14.344 5.829C14.668 5.861 14.8 6.267 14.575 6.48L12.611 8.359C12.458 8.504 12.389 8.722 12.429 8.934L12.914 11.493C12.982 11.835 12.637 12.104 12.32 11.94L10.005 10.705C9.811 10.61 9.602 10.61 9.409 10.705L7.094 11.94C6.777 12.104 6.432 11.835 6.5 11.493L6.985 8.934C7.025 8.722 6.957 8.504 6.803 8.359L4.839 6.48C4.614 6.267 4.746 5.861 5.07 5.829L7.661 5.577C7.879 5.554 8.079 5.434 8.191 5.241L9.61 2.927H9.049Z"/>
+                </svg>
+              </ng-container>
+            </div>
+            <button (click)="updateReview()" class="px-4 py-2 bg-green-500 text-white rounded mr-2">Update Review</button>
+            <button (click)="cancelEdit()" class="px-4 py-2 bg-gray-500 text-white rounded">Cancel</button>
+          </ng-container>
+          <ng-container *ngIf="!(editingReview && editingReview.critic_id === review.critic_id)">
+            <!-- Display Review -->
+            <div class="flex items-start">
+              <img [src]="bookDetails[review.Book.google_books_id]?.cover_image"
+                   alt="Book Cover"
+                   class="w-16 h-auto mr-4 rounded-lg shadow-md cursor-pointer"
+                   (click)="onSelectBook(bookDetails[review.Book.google_books_id])">
+              <div class="flex-1">
+                <p class="text-lg font-medium cursor-pointer"
+                   (click)="onSelectBook(bookDetails[review.Book.google_books_id])">{{ review.Book.title }}</p>
+                <p class="font-bold">Rating: {{ review.rating }}</p>
+                <p>{{ review.review_text }}</p>
+                <p class="text-sm text-gray-500">{{ review.created_at | date }}</p>
+                <div class="mt-2 flex space-x-2">
+                  <button *ngIf="review.user_id === userId"
+                          (click)="editReview(review)"
+                          class="px-4 py-2 bg-blue-500 text-white rounded">Edit</button>
+                  <button *ngIf="review.user_id === userId"
+                          (click)="deleteReview(review.critic_id)"
+                          class="px-4 py-2 bg-red-500 text-white rounded">Delete</button>
+                </div>
+              </div>
+            </div>
+          </ng-container>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

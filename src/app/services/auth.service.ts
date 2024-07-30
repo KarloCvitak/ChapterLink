@@ -25,13 +25,26 @@ export class AuthService {
     return this.http.post(`${this.baseUrl}/authenticate/check-username-email`, { username, email });
   }
 
-  getCurrentUserId(): string | null {
+  getCurrentUserId(): number | null {
     const token = localStorage.getItem('token');
+    console.log("getCurrentUserId() token:", token);
 
     if (token) {
-      const tokenPayload = JSON.parse(atob(token.split('.')[1]));
-      console.log(tokenPayload.id);
-      return tokenPayload.id;
+      try {
+        const base64Url = token.split('.')[1];
+        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+        const jsonPayload = decodeURIComponent(atob(base64).split('').map((c) => {
+          return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+        }).join(''));
+
+        const tokenPayload = JSON.parse(jsonPayload);
+        console.log("Token Payload:", tokenPayload);
+
+        return tokenPayload.id || null; // Ensure 'id' exists
+      } catch (e) {
+        console.error('Error parsing token payload:', e);
+        return null;
+      }
     } else {
       return null;
     }
@@ -43,6 +56,7 @@ export class AuthService {
 
   setToken(token: string): void {
     localStorage.setItem('token', token);
+    console.log("setToken:" + token);
     this.authState.next(true);
   }
 

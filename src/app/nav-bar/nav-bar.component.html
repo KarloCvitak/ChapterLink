@@ -1,0 +1,27 @@
+<nav class="bg-primary-dark p-4 flex flex-wrap justify-between items-center">
+
+  <!-- Logo and Links Section -->
+  <div class="flex items-center justify-center md:justify-start w-full md:w-auto mb-4 md:mb-0">
+    <a routerLink="/" class="text-white font-logo text-xl mr-6">ChapterLink</a>
+    <a routerLink="/" routerLinkActive="text-secondary" class="hidden md:block text-white mr-4">My Home</a>
+  </div>
+
+  <!-- Search Bar -->
+  <div class="flex items-center w-full md:w-auto mb-4 md:mb-0">
+    <app-search-bar class="ml-auto"></app-search-bar>
+  </div>
+
+  <!-- Profile and Logout Section -->
+
+  <div class="flex items-center justify-center md:justify-end w-full md:w-auto">
+    <a *ngIf="userId" [routerLink]="['/profile', userId]" class="block md:inline-block text-white mr-4">Profile</a>
+    <button
+      (click)="logout()"
+      class="bg-secondary text-white focus:outline-none hover:bg-accent hover:text-white py-2 px-4 rounded-lg transition-colors duration-300"
+    >
+      Logout
+    </button>
+  </div>
+
+
+</nav>

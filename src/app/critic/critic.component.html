@@ -1,0 +1,51 @@
+<div class="mt-6">
+  <h3 class="text-xl font-semibold mb-4">Reviews</h3>
+
+  <div *ngIf="userId" class="mb-4">
+    <textarea [(ngModel)]="newCritic.review_text" class="w-full p-2 border rounded mb-2" placeholder="Write your review here"></textarea>
+    <div class="flex mb-2">
+      <ng-container *ngFor="let star of [1, 2, 3, 4, 5]; let i = index">
+        <svg
+          (click)="newCritic.rating = star"
+          [ngClass]="{'text-yellow-500': star <= newCritic.rating, 'text-gray-300': star > newCritic.rating}"
+          class="w-8 h-8 cursor-pointer"
+          fill="currentColor"
+          viewBox="0 0 20 20"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path d="M9.049 2.927C9.237 2.645 9.616 2.645 9.804 2.927L11.223 5.241C11.335 5.434 11.535 5.554 11.753 5.577L14.344 5.829C14.668 5.861 14.8 6.267 14.575 6.48L12.611 8.359C12.458 8.504 12.389 8.722 12.429 8.934L12.914 11.493C12.982 11.835 12.637 12.104 12.32 11.94L10.005 10.705C9.811 10.61 9.602 10.61 9.409 10.705L7.094 11.94C6.777 12.104 6.432 11.835 6.5 11.493L6.985 8.934C7.025 8.722 6.957 8.504 6.803 8.359L4.839 6.48C4.614 6.267 4.746 5.861 5.07 5.829L7.661 5.577C7.879 5.554 8.079 5.434 8.191 5.241L9.61 2.927H9.049Z"/>
+        </svg>
+      </ng-container>
+    </div>
+    <button (click)="addCritic()" class="px-4 py-2 bg-green-500 text-white rounded mr-2">Submit Review</button>
+  </div>
+
+  <div *ngFor="let critic of critics" class="p-4 border rounded mb-4">
+    <ng-container *ngIf="critic.editMode">
+      <textarea [(ngModel)]="critic.editCriticData.review_text" class="w-full p-2 border rounded mb-2" placeholder="Edit your review here"></textarea>
+      <div class="flex mb-2">
+        <ng-container *ngFor="let star of [1, 2, 3, 4, 5]; let i = index">
+          <svg
+            (click)="critic.editCriticData.rating = star"
+            [ngClass]="{'text-yellow-500': star <= critic.editCriticData.rating, 'text-gray-300': star > critic.editCriticData.rating}"
+            class="w-8 h-8 cursor-pointer"
+            fill="currentColor"
+            viewBox="0 0 20 20"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path d="M9.049 2.927C9.237 2.645 9.616 2.645 9.804 2.927L11.223 5.241C11.335 5.434 11.535 5.554 11.753 5.577L14.344 5.829C14.668 5.861 14.8 6.267 14.575 6.48L12.611 8.359C12.458 8.504 12.389 8.722 12.429 8.934L12.914 11.493C12.982 11.835 12.637 12.104 12.32 11.94L10.005 10.705C9.811 10.61 9.602 10.61 9.409 10.705L7.094 11.94C6.777 12.104 6.432 11.835 6.5 11.493L6.985 8.934C7.025 8.722 6.957 8.504 6.803 8.359L4.839 6.48C4.614 6.267 4.746 5.861 5.07 5.829L7.661 5.577C7.879 5.554 8.079 5.434 8.191 5.241L9.61 2.927H9.049Z"/>
+          </svg>
+        </ng-container>
+      </div>
+      <button (click)="updateCritic(critic)" class="px-4 py-2 bg-green-500 text-white rounded mr-2">Update Review</button>
+      <button (click)="cancelEdit(critic)" class="px-4 py-2 bg-gray-500 text-white rounded">Cancel</button>
+    </ng-container>
+    <ng-container *ngIf="!critic.editMode">
+      <p class="font-bold">{{ critic.User.username }} - Rating: {{ critic.rating }}</p>
+      <p>{{ critic.review_text }}</p>
+      <p class="text-sm text-gray-500">{{ critic.created_at | date }}</p>
+      <button *ngIf="critic.user_id === userId" (click)="deleteCritic(critic.critic_id)" class="px-4 py-2 bg-red-500 text-white rounded mr-2">Delete</button>
+      <button *ngIf="critic.user_id === userId" (click)="editCritic(critic)" class="px-4 py-2 bg-blue-500 text-white rounded">Edit</button>
+    </ng-container>
+  </div>
+</div>

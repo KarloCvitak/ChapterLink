@@ -1,0 +1,15 @@
+<div>
+  <h4>Comments</h4>
+  <ul>
+    <li *ngFor="let comment of comments">
+      {{ comment.comment_text }} - <strong>{{ comment.user_id }}</strong>
+    </li>
+  </ul>
+
+  <form [formGroup]="commentForm" (ngSubmit)="submitComment()">
+    <label for="comment_text">Comment:</label>
+    <textarea id="comment_text" formControlName="comment_text"></textarea>
+
+    <button type="submit" [disabled]="!commentForm.valid">Submit Comment</button>
+  </form>
+</div>

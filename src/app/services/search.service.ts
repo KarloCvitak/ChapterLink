@@ -8,7 +8,7 @@ import { Observable } from 'rxjs';
 export class SearchService {
 
   private googleBooksUrl = 'https://www.googleapis.com/books/v1/volumes';
-  private apiKey = 'AIzaSyC2hbiOgavgsJUKOhptRsfbHQCMDV1Ix7w';
+  private apiKey = 'AIzaSyDqphDKCmU2iCXRPblMc8yIY4nXpJC_v6E';
   private baseUrl = 'http://localhost:3000/api';
 
   constructor(private http: HttpClient) { }
@@ -17,7 +17,12 @@ export class SearchService {
     return this.http.get<any>(`${this.baseUrl}/search/users?q=${query}`);
   }
   searchBooks(query: string): Observable<any> {
-    const url = `${this.googleBooksUrl}?q=${query}&key=${this.apiKey}`;
+    const url = `${this.googleBooksUrl}?q=${query}&key=${this.apiKey}&maxResults=25`;
+    return this.http.get(url);
+  }
+
+  searchBookById(bookId: string): Observable<any> {
+    const url = `${this.googleBooksUrl}/${bookId}?key=${this.apiKey}`;
     return this.http.get(url);
   }
 
