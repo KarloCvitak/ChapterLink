@@ -1,0 +1,26 @@
+.reviews-section {
+  margin-top: 20px;
+}
+
+.write-review {
+  margin-bottom: 20px;
+}
+
+.rating {
+  display: flex;
+}
+
+.rating span {
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.rating span.filled {
+  color: gold;
+}
+
+.review {
+  border-bottom: 1px solid #ccc;
+  margin-bottom: 10px;
+  padding-bottom: 10px;
+}

@@ -1,0 +1,78 @@
+<div class="relative flex-grow">
+  <div class="relative flex items-center">
+    <input
+      type="text"
+      [(ngModel)]="query"
+      (input)="onSearch()"
+      placeholder="Search..."
+      class=" w-full px-4 py-2 text-gray-700 focus:outline-none rounded-l-lg"
+    />
+    <button
+      (click)="onEnter()"
+      class="bg-secondary  text-white px-4 py-2 focus:outline-none hover:bg-accent rounded-r-lg"
+    >
+      Search
+    </button>
+  </div>
+
+  <div
+    *ngIf="dropdownVisible"
+    class="absolute w-full bg-white border border-gray-300 rounded-b-lg shadow-lg mt-1 z-10"
+  >
+    <!-- Display filtered results based on the search query -->
+    <div *ngIf="books.length > 0" class="p-4">
+      <h3 class="text-lg font-semibold text-gray-700 mb-2">Books</h3>
+      <ul>
+        <li *ngFor="let book of books.slice(0, 3)" (click)="onSelectItem(book)" class="cursor-pointer hover:bg-gray-100 p-2 rounded">
+          <a [routerLink]="['/book', book.id]" class="flex items-start">
+
+          <div class="flex">
+            <!-- Book Cover Image -->
+            <img *ngIf="book.volumeInfo.imageLinks?.thumbnail" [src]="book.volumeInfo.imageLinks.thumbnail" class="w-12 h-12 mr-4 rounded" alt="Book Cover">
+
+            <!-- Book Details -->
+            <div>
+              <p class="font-medium text-gray-800">{{ book.volumeInfo.title }}</p>
+              <p class="text-sm text-gray-600">{{ book.volumeInfo.authors?.join(', ') }}</p>
+            </div>
+          </div>
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    <div *ngIf="users.length > 0" class="p-4">
+      <h3 class="text-lg font-semibold text-gray-700 mb-2">Users</h3>
+      <ul>
+        <li
+          *ngFor="let user of users.slice(0, 3)"
+          (click)="onSelectItem(user)"
+          class="cursor-pointer hover:bg-gray-100 p-2 rounded"
+        >
+          <p class="font-medium text-gray-800">{{ user.username }}</p>
+        </li>
+      </ul>
+    </div>
+
+    <div *ngIf="lists.length > 0" class="p-4">
+      <h3 class="text-lg font-semibold text-gray-700 mb-2">Lists</h3>
+      <ul>
+        <li
+          *ngFor="let list of lists.slice(0, 3)"
+          (click)="onSelectItem(list)"
+          class="cursor-pointer hover:bg-gray-100 p-2 rounded"
+        >
+          <p class="font-medium text-gray-800">{{ list.title }}</p>
+          <p class="text-sm text-gray-600">{{ list.DESCRIPTION }}</p>
+        </li>
+      </ul>
+    </div>
+
+    <div
+      *ngIf="books.length === 0 && users.length === 0 && lists.length === 0"
+      class="p-4 text-center text-gray-600"
+    >
+      No results found for "{{ query }}"
+    </div>
+  </div>
+</div>
