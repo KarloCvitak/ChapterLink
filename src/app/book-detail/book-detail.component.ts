@@ -4,6 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { SearchService } from '../services/search.service';
 import { UserBookService } from '../services/user-book.service';
 import { AuthService } from '../services/auth.service';
+import {LikeService} from "../services/like.service";
 
 @Component({
   selector: 'app-book-detail',

@@ -8,7 +8,7 @@ import { Observable } from 'rxjs';
 export class SearchService {
 
   private googleBooksUrl = 'https://www.googleapis.com/books/v1/volumes';
-  private apiKey = 'AIzaSyDqphDKCmU2iCXRPblMc8yIY4nXpJC_v6E';
+  private apiKey = 'AIzaSyC2hbiOgavgsJUKOhptRsfbHQCMDV1Ix7w';
   private baseUrl = 'http://localhost:3000/api';
 
   constructor(private http: HttpClient) { }

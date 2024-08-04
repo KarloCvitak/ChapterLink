@@ -2,8 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { UserBookService } from '../services/user-book.service';
 import { AuthService } from '../services/auth.service';
 import { CriticService } from '../services/critic.service';
-import { Router } from '@angular/router';
-import {SearchService} from "../services/search.service";
+import { Router, ActivatedRoute } from '@angular/router';
+import { SearchService } from '../services/search.service';
+import { LikeService } from '../services/like.service';
+import { CustomListsService } from '../services/custom-lists.service';
 
 @Component({
   selector: 'app-profile',
@@ -12,26 +14,67 @@ import {SearchService} from "../services/search.service";
 })
 export class ProfileComponent implements OnInit {
   userId: number | null = null;
+  currentUserId: number | null = null;
   currentStatus: number | null = null;
   books: any[] = [];
+  lists: any[] = [];
   reviews: any[] = [];
   editingReview: any = null;
   bookDetails: any = {}; // To store book details
+
+  likesCountMap: { [criticId: number]: number } = {};
+  userLikesMap: { [criticId: number]: boolean } = {};
+  likesUserMap: { [criticId: number]: any[] } = {}; // Map to store users who liked
+
+  // Manage hover state
+  hoverState: { [criticId: number]: boolean } = {}; // Toggle hover state
 
   constructor(
     private userBookService: UserBookService,
     private authService: AuthService,
     private criticService: CriticService,
     private router: Router,
-    private searchService: SearchService
+    private route: ActivatedRoute,
+    private searchService: SearchService,
+    private likesService: LikeService,
+    private customListsService: CustomListsService
   ) { }
 
   ngOnInit() {
-    this.userId = this.authService.getCurrentUserId();
-    if (this.userId) {
-      this.filterBooks(1); // Default to Currently Reading
-      this.loadUserReviews(); // Load user reviews
-    }
+    this.currentUserId = this.authService.getCurrentUserId();
+    this.route.params.subscribe(params => {
+      this.userId = +params['id']; // Retrieve user ID from route parameters
+
+      this.reloadLists();
+
+
+      if (this.userId) {
+        this.filterBooks(1); // Default to Currently Reading
+        this.loadUserReviews(); // Load user reviews
+
+      }
+    });
+  }
+
+
+
+  reloadLists(){
+    this.customListsService.getAllListsFromAUser(this.userId).subscribe(response => {
+      if (response.status === 'OK') {
+        this.lists = response.lists;
+      }
+    });
+  }
+
+  getLikes(critic_id: number) {
+    this.likesService.getLikesForReview(critic_id).subscribe(response => {
+      if (response.status === 'OK') {
+        const likes = response.likes as { like_id: number, critic_id: number, user_id: number, created_at: Date, User: { username: string } }[];
+        this.likesCountMap[critic_id] = likes.length;
+        this.userLikesMap[critic_id] = likes.some(like => like.user_id === this.currentUserId);
+        this.likesUserMap[critic_id] = likes.map(like => ({ user_id: like.user_id, username: like.User.username }));
+      }
+    });
   }
 
   filterBooks(statusId: number) {
@@ -51,15 +94,47 @@ export class ProfileComponent implements OnInit {
         if (response.status === 'OK') {
           this.reviews = response.reviews;
           this.loadBookDetails();
+          this.reviews.forEach(review => this.getLikes(review.critic_id));
         }
       });
     }
   }
 
+  toggleLike(critic_id: any) {
+    if (this.currentUserId) {
+      const hasLiked = this.userLikesMap[critic_id];
+      if (hasLiked) {
+        this.likesService.unlikeReview(critic_id, this.currentUserId).subscribe(response => {
+          if (response.status === 'OK') {
+            this.likesCountMap[critic_id] = (this.likesCountMap[critic_id] || 0) - 1;
+            this.userLikesMap[critic_id] = false;
+            this.getLikes(critic_id); // Refresh likes data
+          }
+        });
+      } else {
+        this.likesService.likeReview(critic_id, this.currentUserId).subscribe(response => {
+          if (response.status === 'OK') {
+            this.likesCountMap[critic_id] = (this.likesCountMap[critic_id] || 0) + 1;
+            this.userLikesMap[critic_id] = true;
+            this.getLikes(critic_id); // Refresh likes data
+          }
+        });
+      }
+    }
+  }
+
+  navigateToCreateList() {
+    this.router.navigate(['/create-list']);
+  }
+
+  toggleHover(critic_id: number, state: boolean) {
+    this.hoverState[critic_id] = state;
+  }
+
   loadBookDetails() {
     this.reviews.forEach(review => {
       this.searchService.searchBookById(review.Book.google_books_id).subscribe(book => {
-        this.bookDetails[review.Book.google_books_id] = book;
+        this.bookDetails[review.Book.book_id] = book;
       });
     });
   }
@@ -68,8 +143,12 @@ export class ProfileComponent implements OnInit {
     return this.currentStatus === statusId;
   }
 
+  onSelectBookId(id: any) {
+    this.router.navigate(['/book', id]);
+  }
+
   onSelectBook(book: any) {
-    this.router.navigate(['/book', book.google_books_id]);
+    this.router.navigate(['/book', book.Book.google_books_id]);
   }
 
   editReview(review: any) {
@@ -97,5 +176,15 @@ export class ProfileComponent implements OnInit {
 
   cancelEdit() {
     this.editingReview = null;
+  }
+
+  viewListDetails(listId: number): void {
+    this.router.navigate(['/custom-lists', listId]);
+  }
+
+  deleteList(list_id: number) {
+    this.customListsService.deleteList(list_id).subscribe(() => {
+      this.lists = this.lists.filter(list => list.list_id !== list_id);
+    });
   }
 }

@@ -1,10 +1,11 @@
 <div class="mt-6">
   <h3 class="text-xl font-semibold mb-4">Reviews</h3>
 
-  <div *ngIf="userId" class="mb-4">
+  <!-- Review Submission -->
+  <div *ngIf="userId" class="mb-4 bg-gray-100 p-4 rounded-lg shadow-md">
     <textarea [(ngModel)]="newCritic.review_text" class="w-full p-2 border rounded mb-2" placeholder="Write your review here"></textarea>
     <div class="flex mb-2">
-      <ng-container *ngFor="let star of [1, 2, 3, 4, 5]; let i = index">
+      <ng-container *ngFor="let star of [1, 2, 3, 4, 5]">
         <svg
           (click)="newCritic.rating = star"
           [ngClass]="{'text-yellow-500': star <= newCritic.rating, 'text-gray-300': star > newCritic.rating}"
@@ -17,14 +18,15 @@
         </svg>
       </ng-container>
     </div>
-    <button (click)="addCritic()" class="px-4 py-2 bg-green-500 text-white rounded mr-2">Submit Review</button>
+    <button (click)="addCritic()" class="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600">Submit Review</button>
   </div>
 
-  <div *ngFor="let critic of critics" class="p-4 border rounded mb-4">
+  <!-- Existing Reviews -->
+  <div *ngFor="let critic of critics" class="p-4 bg-gray-100 rounded-lg shadow-md mb-4 relative">
     <ng-container *ngIf="critic.editMode">
       <textarea [(ngModel)]="critic.editCriticData.review_text" class="w-full p-2 border rounded mb-2" placeholder="Edit your review here"></textarea>
       <div class="flex mb-2">
-        <ng-container *ngFor="let star of [1, 2, 3, 4, 5]; let i = index">
+        <ng-container *ngFor="let star of [1, 2, 3, 4, 5]">
           <svg
             (click)="critic.editCriticData.rating = star"
             [ngClass]="{'text-yellow-500': star <= critic.editCriticData.rating, 'text-gray-300': star > critic.editCriticData.rating}"
@@ -37,15 +39,49 @@
           </svg>
         </ng-container>
       </div>
-      <button (click)="updateCritic(critic)" class="px-4 py-2 bg-green-500 text-white rounded mr-2">Update Review</button>
-      <button (click)="cancelEdit(critic)" class="px-4 py-2 bg-gray-500 text-white rounded">Cancel</button>
+      <button (click)="updateCritic(critic)" class="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 mr-2">Update Review</button>
+      <button (click)="cancelEdit(critic)" class="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600">Cancel</button>
     </ng-container>
     <ng-container *ngIf="!critic.editMode">
       <p class="font-bold">{{ critic.User.username }} - Rating: {{ critic.rating }}</p>
       <p>{{ critic.review_text }}</p>
-      <p class="text-sm text-gray-500">{{ critic.created_at | date }}</p>
-      <button *ngIf="critic.user_id === userId" (click)="deleteCritic(critic.critic_id)" class="px-4 py-2 bg-red-500 text-white rounded mr-2">Delete</button>
-      <button *ngIf="critic.user_id === userId" (click)="editCritic(critic)" class="px-4 py-2 bg-blue-500 text-white rounded">Edit</button>
+      <p class="text-sm text-gray-500">Reviewed on: {{ critic.created_at | date }}</p>
+
+      <!-- Like/Unlike Button -->
+      <button
+        class="px-4 py-2 rounded"
+        [ngClass]="{
+          'bg-blue-600 text-white': userLikesMap[critic.critic_id],
+          'bg-blue-500 text-white hover:bg-blue-600': !userLikesMap[critic.critic_id]
+        }"
+        (click)="toggleLike(critic.critic_id)"
+      >
+        {{ userLikesMap[critic.critic_id] ? 'Unlike' : 'Like' }}
+      </button>
+
+      <button *ngIf="critic.user_id === userId" (click)="deleteCritic(critic.critic_id)" class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 mr-2">Delete</button>
+      <button *ngIf="critic.user_id === userId" (click)="editCritic(critic)" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">Edit</button>
+      <button class="px-4 py-2 bg-purple-500 text-white rounded hover:bg-purple-600" [routerLink]="['/review', critic.critic_id]">View Comments</button>
+
+      <!-- Show users who liked -->
+      <ng-container *ngIf="likesUserMap[critic.critic_id] && likesUserMap[critic.critic_id].length > 0">
+        <p (mouseenter)="toggleHover(critic.critic_id, true)" (mouseleave)="toggleHover(critic.critic_id, false)">
+          Liked by:
+          <span *ngFor="let user of likesUserMap[critic.critic_id]; let i = index">
+            {{ user.username }}<span *ngIf="i < likesUserMap[critic.critic_id].length - 1">, </span>
+          </span>
+          <span *ngIf="likesUserMap[critic.critic_id].length > 2"> and more</span>
+        </p>
+
+        <!-- Hover effect -->
+        <div
+          *ngIf="hoverState[critic.critic_id]"
+          class="absolute bg-white border p-2 shadow-lg rounded mt-2">
+          <div *ngFor="let user of likesUserMap[critic.critic_id].slice(2)">
+            <p>{{ user.username }}</p>
+          </div>
+        </div>
+      </ng-container>
     </ng-container>
   </div>
 </div>

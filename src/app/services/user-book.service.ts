@@ -43,4 +43,5 @@ export class UserBookService {
   removeBookStatus(userId: number, bookId: string): Observable<any> {
     return this.http.delete(`${this.apiUrl}/${userId}/${bookId}/status`);
   }
+
 }

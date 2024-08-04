@@ -1,8 +1,10 @@
+// critic.component.ts
 import { Component, Input, OnInit } from '@angular/core';
 import { CriticService } from '../services/critic.service';
 import { AuthService } from '../services/auth.service';
 import { UserBookService } from '../services/user-book.service';
-import { SearchService } from "../services/search.service"; // Ensure you have this service
+import { SearchService } from "../services/search.service";
+import { LikeService } from "../services/like.service";
 
 @Component({
   selector: 'app-critic',
@@ -17,27 +19,70 @@ export class CriticComponent implements OnInit {
   book: any;
   currentStatus: number | null = null;
 
+  likesCountMap: { [criticId: number]: number } = {};
+  userLikesMap: { [criticId: number]: boolean } = {};
+  likesUserMap: { [criticId: number]: any[] } = {}; // Map to store users who liked
+
+  hoverState: { [criticId: number]: boolean } = {}; // Manage hover state
+
   constructor(
     private criticService: CriticService,
     private authService: AuthService,
     private searchService: SearchService,
-    private bookService: UserBookService // Inject BookService
+    private likeService: LikeService,
+    private bookService: UserBookService
   ) {}
 
   ngOnInit() {
     this.userId = this.authService.getCurrentUserId();
 
-    console.log("Google book id: at critic comoponet:" + this.bookId);
-
     this.searchService.searchBookById(this.bookId).subscribe(book => {
       this.book = book;
       this.loadCritics();
-
-      console.log("NEZNAM TEST1 " + this.book.id);
       if (this.userId) {
         this.getCurrentStatus();
       }
     });
+  }
+
+
+
+  getLikes(critic_id: number) {
+    this.likeService.getLikesForReview(critic_id).subscribe(response => {
+      if (response.status === 'OK') {
+        const likes = response.likes as { like_id: number, critic_id: number, user_id: number, created_at: Date, User: { username: string } }[];
+        // Initialize maps
+        this.likesCountMap[critic_id] = likes.length;
+
+        this.userLikesMap[critic_id] = likes.some(like => like.user_id === this.userId);
+
+        // Map users who liked
+        this.likesUserMap[critic_id] = likes.map(like => ({ user_id: like.user_id, username: like.User.username }));
+      }
+    });
+  }
+
+  toggleLike(critic_id: any) {
+    if (this.userId) {
+      const hasLiked = this.userLikesMap[critic_id];
+      if (hasLiked) {
+        this.likeService.unlikeReview(critic_id, this.userId).subscribe(response => {
+          if (response.status === 'OK') {
+            this.likesCountMap[critic_id] = (this.likesCountMap[critic_id] || 0) - 1;
+            this.userLikesMap[critic_id] = false;
+            this.getLikes(critic_id); // Refresh likes data
+          }
+        });
+      } else {
+        this.likeService.likeReview(critic_id, this.userId).subscribe(response => {
+          if (response.status === 'OK') {
+            this.likesCountMap[critic_id] = (this.likesCountMap[critic_id] || 0) + 1;
+            this.userLikesMap[critic_id] = true;
+            this.getLikes(critic_id); // Refresh likes data
+          }
+        });
+      }
+    }
   }
 
   loadCritics() {
@@ -48,16 +93,19 @@ export class CriticComponent implements OnInit {
           editMode: false,
           editCriticData: { ...critic }
         }));
+
+        // Fetch likes for each critic
+        this.critics.forEach(critic => this.getLikes(critic.critic_id));
       }
     });
   }
 
   addCritic() {
     if (this.userId && this.bookId) {
-      this.bookService.addBookToUserStatus(this.userId, this.book, 1).subscribe(() => { // Assuming 1 is 'Read' status ID
+      this.bookService.addBookToUserStatus(this.userId, this.book, 1).subscribe(() => {
         const criticData = {
           user_id: this.userId,
-          google_books_id: this.bookId, // Ensure this matches with backend if needed
+          google_books_id: this.bookId,
           rating: this.newCritic.rating,
           review_text: this.newCritic.review_text
         };
@@ -77,7 +125,6 @@ export class CriticComponent implements OnInit {
       this.bookService.getBookStatus(this.userId, this.book.id).subscribe(response => {
         if (response.status === 'OK') {
           this.currentStatus = response.status_id;
-          console.log("TEST1  " + this.userId + " " + this.book.id + " " + response.status_id);
         }
       });
     }
@@ -106,5 +153,10 @@ export class CriticComponent implements OnInit {
         this.loadCritics();
       }
     });
+  }
+
+  // Toggle hover state
+  toggleHover(critic_id: number, state: boolean) {
+    this.hoverState[critic_id] = state;
   }
 }

@@ -25,6 +25,10 @@ export class CriticService {
   }
 
 
+  getCriticById(criticId: number | null): Observable<any> {
+    return this.http.get(`${this.apiUrl}/${criticId}`);
+  }
+
   // Add a new review
   addCritic(criticData: any): Observable<any> {
     return this.http.post<any>(this.apiUrl, criticData);
