@@ -19,9 +19,10 @@ import { BookDetailComponent } from './book-detail/book-detail.component';
 import { ProfileComponent } from './profile/profile.component';
 import { UserProfileInfoComponent } from './user-profile-info/user-profile-info.component';
 import { CriticComponent } from './critic/critic.component';
-import { CommentComponent } from './comment/comment.component';
-import { LikeComponent } from './like/like.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { CriticDetailsComponent } from './critic-details/critic-details.component';
+import { CreatingListComponent } from './creating-list/creating-list.component';
+import { CustomListsComponent } from './custom-lists/custom-lists.component';
 
 @NgModule({
   declarations: [
@@ -34,8 +35,9 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
     ProfileComponent,
     UserProfileInfoComponent,
     CriticComponent,
-    CommentComponent,
-    LikeComponent
+    CriticDetailsComponent,
+    CreatingListComponent,
+    CustomListsComponent
   ],
   imports: [
     BrowserModule,

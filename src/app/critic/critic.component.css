@@ -24,3 +24,10 @@
   margin-bottom: 10px;
   padding-bottom: 10px;
 }
+
+.absolute {
+  position: absolute;
+}
+.relative {
+  position: relative;
+}

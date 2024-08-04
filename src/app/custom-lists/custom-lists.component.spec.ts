@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { LikeComponent } from './like.component';
+import { CustomListsComponent } from './custom-lists.component';
 
-describe('LikeComponent', () => {
-  let component: LikeComponent;
-  let fixture: ComponentFixture<LikeComponent>;
+describe('CustomListsComponent', () => {
+  let component: CustomListsComponent;
+  let fixture: ComponentFixture<CustomListsComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [LikeComponent]
+      declarations: [CustomListsComponent]
     })
     .compileComponents();
     
-    fixture = TestBed.createComponent(LikeComponent);
+    fixture = TestBed.createComponent(CustomListsComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

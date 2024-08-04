@@ -1,0 +1,34 @@
+<app-nav-bar></app-nav-bar>
+
+<div class="flex justify-center items-center min-h-screen bg-gray-100">
+  <div class="max-w-6xl w-full p-6 bg-white rounded-lg shadow-lg">
+
+    <!-- Display List Information -->
+    <div *ngIf="list" class="list-info mb-6">
+      <h1 class="text-3xl font-bold mb-4 text-center">{{ list.title }}</h1>
+      <p class="text-lg text-gray-700">{{ list.description }}</p>
+    </div>
+
+    <!-- Display Books List -->
+    <div class="books-list" *ngIf="books.length > 0; else noBooks">
+      <ul class="space-y-4">
+        <li *ngFor="let book of books" class="book-item flex items-start bg-gray-50 p-4 rounded-lg shadow-md hover:bg-gray-100 transition">
+          <!-- Book Cover -->
+          <div class="w-24 md:w-32 flex-shrink-0">
+            <img *ngIf="book.cover_image" [src]="book.cover_image" alt="{{ book.title }} cover" class="w-full h-auto rounded-lg shadow-md">
+          </div>
+          <!-- Book Details -->
+          <div class="ml-4 flex-1">
+            <h2 class="text-xl font-semibold">{{ book.title }}</h2>
+            <p class="text-sm text-gray-500 mt-2">{{ book.listAttributes.description }}</p>
+          </div>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Template for when no books are available -->
+    <ng-template #noBooks>
+      <p class="text-center text-lg text-gray-600">No books found in this list.</p>
+    </ng-template>
+  </div>
+</div>

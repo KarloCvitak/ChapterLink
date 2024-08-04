@@ -1,0 +1,77 @@
+<app-nav-bar></app-nav-bar>
+
+<div class="flex justify-center items-center min-h-screen bg-gray-100">
+  <div class="max-w-4xl w-full p-6 bg-white rounded-lg shadow-lg">
+    <h1 class="text-3xl font-bold mb-6 text-center">Create a List</h1>
+    <form (ngSubmit)="onSubmit()">
+      <div class="mb-4">
+        <label for="title" class="block text-lg font-medium text-gray-700">Title</label>
+        <input id="title" [(ngModel)]="list.title" name="title" required
+               class="mt-1 p-2 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+      </div>
+
+      <div class="mb-6">
+        <label for="description" class="block text-lg font-medium text-gray-700">Description</label>
+        <textarea id="description" [(ngModel)]="list.description" name="description"
+                  class="mt-1 p-2 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"></textarea>
+      </div>
+
+      <h2 class="text-2xl font-semibold mb-4">Add Books</h2>
+      <div class="mb-4">
+        <div class="relative flex items-center">
+          <input
+            type="text"
+            [(ngModel)]="query"
+            (input)="onSearch()"
+            name="searchQuery"
+            placeholder="Search..."
+            class="w-full px-4 py-2 text-gray-700 focus:outline-none rounded-l-lg"
+          />
+        </div>
+        <div
+          *ngIf="dropdownVisible"
+          class="absolute w-full bg-white border border-gray-300 rounded-b-lg shadow-lg mt-1 z-10"
+        >
+          <div *ngIf="books.length > 0" class="p-4">
+            <h3 class="text-lg font-semibold text-gray-700 mb-2">Books</h3>
+            <ul>
+              <li *ngFor="let book of books.slice(0, 3)" (click)="onSelectItem(book)" class="cursor-pointer hover:bg-gray-100 p-2 rounded">
+                <div class="flex">
+                  <img *ngIf="book.volumeInfo.imageLinks?.thumbnail" [src]="book.volumeInfo.imageLinks.thumbnail" class="w-12 h-12 mr-4 rounded" alt="Book Cover">
+                  <div>
+                    <p class="font-medium text-gray-800">{{ book.volumeInfo.title }}</p>
+                    <p class="text-sm text-gray-600">{{ book.volumeInfo.authors?.join(', ') }}</p>
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- List of added books -->
+      <div *ngFor="let book of list.books; let i = index" class="mb-4 p-4 border rounded-lg bg-white shadow-sm">
+        <div class="mb-4">
+          <label for="bookTitle{{i}}" class="block text-lg font-medium text-gray-700">Book Title</label>
+          <input id="bookTitle{{i}}" [value]="book.title" readonly
+                 class="mt-1 p-2 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+        </div>
+
+        <div class="mb-4" *ngIf="book.showDescriptionInput">
+          <label for="bookDescription{{i}}" class="block text-lg font-medium text-gray-700">Book Description</label>
+          <textarea id="bookDescription{{i}}" [(ngModel)]="book.description" name="bookDescription{{i}}"
+                    class="mt-1 p-2 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"></textarea>
+        </div>
+        <button type="button" (click)="toggleDescriptionInput(i)" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+          {{ book.showDescriptionInput ? 'Save Description' : 'Add Description' }}
+        </button>
+        <button type="button" (click)="removeBook(i)"
+                class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600">Remove Book</button>
+      </div>
+
+      <div class="flex justify-between items-center">
+        <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">Create List</button>
+      </div>
+    </form>
+  </div>
+</div>
