@@ -23,6 +23,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { CriticDetailsComponent } from './critic-details/critic-details.component';
 import { CreatingListComponent } from './creating-list/creating-list.component';
 import { CustomListsComponent } from './custom-lists/custom-lists.component';
+import { UserRoleDashboardComponent } from './user-role-dashboard/user-role-dashboard.component';
 
 @NgModule({
   declarations: [
@@ -37,7 +38,8 @@ import { CustomListsComponent } from './custom-lists/custom-lists.component';
     CriticComponent,
     CriticDetailsComponent,
     CreatingListComponent,
-    CustomListsComponent
+    CustomListsComponent,
+    UserRoleDashboardComponent
   ],
   imports: [
     BrowserModule,

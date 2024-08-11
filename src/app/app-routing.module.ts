@@ -9,6 +9,7 @@ import {CriticDetailsComponent} from "./critic-details/critic-details.component"
 import {CreatingListComponent} from "./creating-list/creating-list.component";
 import {CustomListsService} from "./services/custom-lists.service";
 import {CustomListsComponent} from "./custom-lists/custom-lists.component";
+import {UserRoleDashboardComponent} from "./user-role-dashboard/user-role-dashboard.component";
 
 const routes: Routes = [
   { path: '', component: FeedComponent, canActivate: [AuthenticationGuard] },
@@ -21,6 +22,7 @@ const routes: Routes = [
   { path: 'review/:id', component: CriticDetailsComponent,canActivate: [AuthenticationGuard] },
   { path: 'create-list', component: CreatingListComponent, canActivate: [AuthenticationGuard]  },
   { path: 'custom-lists/:id', component: CustomListsComponent, canActivate: [AuthenticationGuard]  },
+  { path: 'user-role-dashboard', component: UserRoleDashboardComponent, canActivate: [AuthenticationGuard]  },
 
 
 ];
