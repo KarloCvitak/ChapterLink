@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { CriticService } from '../services/critic.service';
 import { AuthService } from '../services/auth.service';
-import { ActivatedRoute } from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import { SearchService } from '../services/search.service';
 import { CommentService } from '../services/comment.service';
 import {LikeService} from "../services/like.service";
+import {RoleService} from "../services/role.service";
 
 @Component({
   selector: 'app-critic-details',
@@ -24,6 +25,9 @@ export class CriticDetailsComponent implements OnInit {
   likesCountMap: { [criticId: number]: number } = {};
   userLikesMap: { [criticId: number]: boolean } = {};
   likesUserMap: { [criticId: number]: any[] } = {}; // Map to store users who liked
+  bookDetails: any = {}; // To store book details
+  currentUserId: number | null = null;
+  isAdmin: boolean = false;
 
 // Manage hover state
   hoverState: { [criticId: number]: boolean } = {}; // Toggle hover state
@@ -34,7 +38,9 @@ export class CriticDetailsComponent implements OnInit {
     private route: ActivatedRoute,
     private searchService: SearchService,
     private commentService: CommentService,
-    private likesService: LikeService
+    private likesService: LikeService,
+    private router: Router,
+    private roleService: RoleService
   ) { }
 
   ngOnInit() {
@@ -43,7 +49,20 @@ export class CriticDetailsComponent implements OnInit {
     if (criticId) {
       this.loadReviewDetails(criticId);
       this.loadComments(criticId);
+      this.loadBookDetails(this.review.Book.google_books_id);
+      this.checkIfAdmin(this.userId);
+
     }
+  }
+
+  checkIfAdmin(userId: number | null): void {
+    this.roleService.getUserRoles(userId).subscribe(response => {
+      this.isAdmin = response.roles.some((role: any) => role.role_name === 'Admin');
+    });
+  }
+
+  viewReviewDetails(criticId: number) {
+    this.router.navigate([`/review/${criticId}`]);
   }
 
   loadReviewDetails(criticId: number) {

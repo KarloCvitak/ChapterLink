@@ -1,11 +1,13 @@
-<div class="flex-col bg-gray-100">
-  <app-nav-bar></app-nav-bar>
+<app-nav-bar></app-nav-bar>
 
-  <div class="flex justify-start items-start p-4">
+
+<div class="flex flex-col items-center bg-gray-100 min-h-screen">
+
+  <div class="flex justify-center items-center w-full p-4">
     <div class="max-w-6xl w-full p-6 bg-white rounded-lg shadow-lg">
 
       <!-- Book Details Section -->
-      <div class="flex items-start mb-6">
+      <div class="flex items-start justify-center mb-6">
         <!-- Book Cover -->
         <img *ngIf="book?.volumeInfo.imageLinks?.thumbnail"
              [src]="book.volumeInfo.imageLinks?.thumbnail"
@@ -24,7 +26,7 @@
         <ng-container *ngIf="editingReview">
           <!-- Edit Review -->
           <textarea [(ngModel)]="editingReview.review_text" class="w-full p-2 border rounded mb-2" placeholder="Edit your review here"></textarea>
-          <div class="flex mb-2">
+          <div class="flex justify-center mb-2">
             <ng-container *ngFor="let star of [1, 2, 3, 4, 5]">
               <svg
                 (click)="editingReview.rating = star"
@@ -38,70 +40,67 @@
               </svg>
             </ng-container>
           </div>
-          <button (click)="updateReview()" class="px-4 py-2 bg-green-500 text-white rounded mr-2">Update Review</button>
-          <button (click)="cancelEdit()" class="px-4 py-2 bg-gray-500 text-white rounded">Cancel</button>
+          <div class="flex justify-center">
+            <button (click)="updateReview()" class="px-4 py-2 bg-green-500 text-white rounded mr-2">Update Review</button>
+            <button (click)="cancelEdit()" class="px-4 py-2 bg-gray-500 text-white rounded">Cancel</button>
+          </div>
         </ng-container>
         <ng-container *ngIf="!editingReview">
           <!-- Display Review -->
-          <p class="font-bold text-xl mb-2">Rating: {{ review.rating }}</p>
-          <p class="text-lg mb-2">{{ review.review_text }}</p>
-          <p class="text-sm text-gray-500 mb-4">{{ review.created_at | date }}</p>
-          <div class="flex space-x-2">
-            <button *ngIf="review.user_id === userId"
-                    (click)="editReview(review)"
-                    class="px-4 py-2 bg-blue-500 text-white rounded">Edit</button>
-            <button *ngIf="review.user_id === userId"
-                    (click)="deleteReview(review.critic_id)"
-                    class="px-4 py-2 bg-red-500 text-white rounded">Delete</button>
-          </div>
+          <div class="flex justify-between items-center">
+            <div>
+              <h3 class="text-xl font-bold">{{ bookDetails[review.Book.book_id]?.title || review.Book.title }}</h3>
+              <p class="text-gray-700">{{ review.review_text }}</p>
+              <p class="text-gray-700">{{ review.rating }}/5</p>
 
-          <!-- Like/Unlike Button -->
-          <button
-            class="px-4 py-2 rounded"
-            [ngClass]="{
-          'bg-blue-600 text-white': userLikesMap[review.critic_id],
-          'bg-blue-500 text-white hover:bg-blue-600': !userLikesMap[review.critic_id]
-        }"
-            (click)="toggleLike(review.critic_id)"
-          >
-            {{ userLikesMap[review.critic_id] ? 'Unlike' : 'Like' }}
-          </button>
-
-          <!-- Show users who liked -->
-          <p (mouseenter)="toggleHover(review.critic_id, true)" (mouseleave)="toggleHover(review.critic_id, false)">
-            Liked by:
-            <span *ngFor="let user of likesUserMap[review.critic_id]; let i = index">
-          {{ user.username }}<span *ngIf="i < likesUserMap[review.critic_id].length - 1">, </span>
-        </span>
-            <span *ngIf="likesUserMap[review.critic_id].length > 2">and more</span>
-          </p>
-          <!-- Hover effect -->
-          <div
-            *ngIf="hoverState[review.critic_id]"
-            class="absolute bg-white border p-2 shadow-lg rounded mt-2">
-            <div *ngFor="let user of likesUserMap[review.critic_id]">
-              {{ user.username }}
+              <p class="text-gray-500 text-sm">{{ review.created_at | date }}</p>
+              <div class="flex items-center mt-2">
+                <button
+                  (click)="toggleLike(review.critic_id)"
+                  class="flex items-center text-gray-500 hover:text-gray-700"
+                >
+                  <span [ngClass]="userLikesMap[review.critic_id] ? 'text-red-500' : ''">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M5 15l7-7 7 7" />
+                    </svg>
+                  </span>
+                  <span class="ml-1">{{ likesCountMap[review.critic_id] || 0 }}</span>
+                </button>
+                <span
+                  class="ml-2 text-sm text-gray-500 hover:text-gray-700 cursor-pointer"
+                  (mouseenter)="toggleHover(review.critic_id, true)"
+                  (mouseleave)="toggleHover(review.critic_id, false)"
+                >
+                  {{ likesCountMap[review.critic_id] || 0 }} like(s)
+                  <div *ngIf="hoverState[review.critic_id]" class="absolute bg-white shadow-lg rounded-lg p-4 mt-2">
+                    <h4 class="font-bold mb-2">Liked by:</h4>
+                    <ul>
+                      <li *ngFor="let user of likesUserMap[review.critic_id]">
+                        {{ user.username }}
+                      </li>
+                    </ul>
+                  </div>
+                </span>
+              </div>
+            </div>
+            <div *ngIf="review.user_id === userId || isAdmin" class="flex space-x-2">
+              <button (click)="editReview(review)" class="px-2 py-1 bg-yellow-500 text-white rounded hover:bg-yellow-600">Edit</button>
+              <button (click)="deleteReview(review.critic_id)" class="px-2 py-1 bg-red-500 text-white rounded hover:bg-red-600">Delete</button>
             </div>
           </div>
-
         </ng-container>
-
-
-
-
-
-
-
       </div>
 
       <!-- Comments Section -->
       <div class="border-t pt-4 mt-4">
-        <h3 class="text-xl font-bold mb-4">Comments</h3>
+        <h3 class="text-xl font-bold mb-4 text-center">Comments</h3>
 
         <!-- Add Comment -->
         <div *ngIf="!editingComment" class="p-4">
           <textarea [(ngModel)]="newComment" class="w-full p-2 border rounded mb-2" placeholder="Add a comment"></textarea>
-          <button (click)="addComment()" class="px-4 py-2 bg-blue-500 text-white rounded">Add Comment</button>
+          <div class="flex justify-center">
+            <button (click)="addComment()" class="px-4 py-2 bg-blue-500 text-white rounded">Add Comment</button>
+          </div>
         </div>
 
         <!-- Display Comments and Edit Comment -->
@@ -109,26 +108,24 @@
           <ng-container *ngIf="editingComment?.comment_id === comment.comment_id">
             <!-- Edit Comment -->
             <textarea [(ngModel)]="editingComment.comment_text" class="w-full p-2 border rounded mb-2" placeholder="Edit your comment here"></textarea>
-            <div class="flex mb-2">
+            <div class="flex justify-center">
               <button (click)="updateComment()" class="px-4 py-2 bg-green-500 text-white rounded mr-2">Update Comment</button>
               <button (click)="cancelEditComments()" class="px-4 py-2 bg-gray-500 text-white rounded">Cancel</button>
             </div>
           </ng-container>
           <ng-container *ngIf="editingComment?.comment_id !== comment.comment_id">
             <!-- Display Comment -->
-            <p class="font-semibold">{{ comment.User.username }}</p>
-            <p class="text-lg mb-2">{{ comment.comment_text }}</p>
-            <p class="text-sm text-gray-500 mb-2">{{ comment.created_at | date }}</p>
-            <div class="flex space-x-2">
-              <button *ngIf="comment.user_id === userId"
+            <p class="font-semibold text-center">{{ comment.User.username }}</p>
+            <p class="text-lg mb-2 text-center">{{ comment.comment_text }}</p>
+            <p class="text-sm text-gray-500 mb-2 text-center">{{ comment.created_at | date }}</p>
+            <div class="flex justify-center space-x-2">
+              <button *ngIf="comment.user_id === userId || isAdmin"
                       (click)="editComment(comment)"
                       class="px-4 py-2 bg-blue-500 text-white rounded">Edit</button>
-              <button *ngIf="comment.user_id === userId"
+              <button *ngIf="comment.user_id === userId || isAdmin"
                       (click)="deleteComment(comment.comment_id)"
                       class="px-4 py-2 bg-red-500 text-white rounded">Delete</button>
             </div>
-
-
           </ng-container>
         </div>
       </div>

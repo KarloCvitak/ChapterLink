@@ -5,6 +5,7 @@ import { AuthService } from '../services/auth.service';
 import { UserBookService } from '../services/user-book.service';
 import { SearchService } from "../services/search.service";
 import { LikeService } from "../services/like.service";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-critic',
@@ -30,7 +31,8 @@ export class CriticComponent implements OnInit {
     private authService: AuthService,
     private searchService: SearchService,
     private likeService: LikeService,
-    private bookService: UserBookService
+    private bookService: UserBookService,
+    private router: Router
   ) {}
 
   ngOnInit() {
@@ -45,7 +47,9 @@ export class CriticComponent implements OnInit {
     });
   }
 
-
+  viewReviewDetails(criticId: number) {
+    this.router.navigate([`/review/${criticId}`]);
+  }
 
   getLikes(critic_id: number) {
     this.likeService.getLikesForReview(critic_id).subscribe(response => {

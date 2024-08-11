@@ -40,34 +40,43 @@
     <!-- Status Buttons -->
     <div class="mt-6 flex justify-center space-x-4">
       <button
-        class="px-4 py-2 rounded"
+        class="px-4 py-2 rounded flex items-center space-x-2"
         [ngClass]="{
           'bg-blue-600 text-white': isActive(1),
           'bg-blue-500 text-white hover:bg-blue-600': !isActive(1)
         }"
         (click)="addToStatus(1)"
       >
-        Currently Reading
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M5 15l7-7 7 7" />
+        </svg>
+        <span>Currently Reading</span>
       </button>
       <button
-        class="px-4 py-2 rounded"
+        class="px-4 py-2 rounded flex items-center space-x-2"
         [ngClass]="{
           'bg-green-600 text-white': isActive(2),
           'bg-green-500 text-white hover:bg-green-600': !isActive(2)
         }"
         (click)="addToStatus(2)"
       >
-        Read
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M5 15l7-7 7 7" />
+        </svg>
+        <span>Read</span>
       </button>
       <button
-        class="px-4 py-2 rounded"
+        class="px-4 py-2 rounded flex items-center space-x-2"
         [ngClass]="{
           'bg-yellow-600 text-white': isActive(3),
           'bg-yellow-500 text-white hover:bg-yellow-600': !isActive(3)
         }"
         (click)="addToStatus(3)"
       >
-        Want to Read
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M5 15l7-7 7 7" />
+        </svg>
+        <span>Want to Read</span>
       </button>
     </div>
 

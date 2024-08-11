@@ -65,6 +65,7 @@ export class BookDetailComponent implements OnInit {
     }
   }
 
+
   isActive(statusId: number): boolean {
     return this.currentStatus === statusId;
   }

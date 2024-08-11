@@ -6,6 +6,8 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { SearchService } from '../services/search.service';
 import { LikeService } from '../services/like.service';
 import { CustomListsService } from '../services/custom-lists.service';
+import {UserService} from "../services/user.service";
+import {RoleService} from "../services/role.service";
 
 @Component({
   selector: 'app-profile',
@@ -29,6 +31,9 @@ export class ProfileComponent implements OnInit {
   // Manage hover state
   hoverState: { [criticId: number]: boolean } = {}; // Toggle hover state
 
+  currentUser: any;
+  isAdmin: boolean = false;
+
   constructor(
     private userBookService: UserBookService,
     private authService: AuthService,
@@ -37,7 +42,9 @@ export class ProfileComponent implements OnInit {
     private route: ActivatedRoute,
     private searchService: SearchService,
     private likesService: LikeService,
-    private customListsService: CustomListsService
+    private customListsService: CustomListsService,
+    private userService: UserService,
+    private roleService: RoleService
   ) { }
 
   ngOnInit() {
@@ -48,10 +55,12 @@ export class ProfileComponent implements OnInit {
       this.reloadLists();
 
 
+
+
       if (this.userId) {
         this.filterBooks(1); // Default to Currently Reading
         this.loadUserReviews(); // Load user reviews
-
+        this.checkIfAdmin(this.currentUserId);
       }
     });
   }
@@ -63,6 +72,16 @@ export class ProfileComponent implements OnInit {
       if (response.status === 'OK') {
         this.lists = response.lists;
       }
+    });
+  }
+
+  viewReviewDetails(criticId: number) {
+    this.router.navigate([`/review/${criticId}`]);
+  }
+
+  checkIfAdmin(userId: number | null): void {
+    this.roleService.getUserRoles(userId).subscribe(response => {
+      this.isAdmin = response.roles.some((role: any) => role.role_name === 'Admin');
     });
   }
 
