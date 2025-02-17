@@ -9,3 +9,8 @@ export const BOOK_ENDPOINTS = {
   BOOK: `${API_BASE_URL}/books`,
   GOOGLE: `${API_BASE_URL}/books/google/`
 };
+
+export const COMMENTS_ENDPOINTS = {
+  COMMENT: `${API_BASE_URL}/api/comments/`,
+  COMMENT_REVIEW: `${API_BASE_URL}/api/critics/`
+};
