@@ -98,7 +98,6 @@ export class CriticDetailsComponent implements OnInit {
 
   }
 
-
   deleteReview(reviewId: number): void {
     if (confirm('Are you sure you want to delete this review?')) {
 

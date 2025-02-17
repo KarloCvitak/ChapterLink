@@ -1,72 +1,65 @@
-<div class="min-h-screen flex items-center justify-center bg-primary-light py-12 px-4 sm:px-6 lg:px-8">
-  <div class="max-w-md w-full space-y-8">
-    <div>
-      <h1 class="text-4xl font-logo text-primary-dark text-center">ChapterLink</h1>
-      <h2 class="mt-6 text-center text-2xl font-extrabold text-gray-900">Register</h2>
+<div class="register-container">
+  <div class="register-box">
+    <div class="header">
+      <h1 class="logo">ChapterLink</h1>
+      <h2 class="subtitle">Register</h2>
     </div>
-    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="mt-8 space-y-6">
-      <div *ngIf="usernameInUse || emailInUse" class="text-red-500 text-sm text-center mb-4">
+
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="form">
+
+      <div *ngIf="usernameInUse || emailInUse" class="error-message">
         Username or Email is already in use
       </div>
-      <div class="rounded-md shadow-sm -space-y-px">
 
-        <div class="mb-4">
-          <label for="username" class="sr-only">Username</label>
-          <input type="text" id="username" formControlName="username" class="appearance-none rounded-t-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-primary focus:border-primary-light sm:text-sm" placeholder="Username">
-          <div class="text-red-500 text-sm mt-1" *ngIf="registerForm.get('username')?.touched && registerForm.get('username')?.errors?.['required']">
-            Username is required
-          </div>
-        </div>
+      <mat-form-field appearance="fill" class="full-width">
+        <mat-label>Username</mat-label>
+        <input matInput type="text" formControlName="username" placeholder="Username" required>
+        <mat-error *ngIf="registerForm.get('username')?.touched && registerForm.get('username')?.errors?.['required']">
+          Username is required
+        </mat-error>
+      </mat-form-field>
 
+      <mat-form-field appearance="fill" class="full-width">
+        <mat-label>Email address</mat-label>
+        <input matInput type="email" formControlName="email" placeholder="you@example.com" required>
+        <mat-error *ngIf="registerForm.get('email')?.touched && registerForm.get('email')?.errors?.['required']">
+          Email is required
+        </mat-error>
+        <mat-error *ngIf="registerForm.get('email')?.touched && registerForm.get('email')?.errors?.['email']">
+          Invalid email format
+        </mat-error>
+        <mat-error *ngIf="emailInUse">
+          Email is already in use
+        </mat-error>
+      </mat-form-field>
 
+      <mat-form-field appearance="fill" class="full-width">
+        <mat-label>Password</mat-label>
+        <input matInput type="password" formControlName="password" placeholder="••••••••" required>
+        <mat-error *ngIf="registerForm.get('password')?.touched && registerForm.get('password')?.errors?.['required']">
+          Password is required
+        </mat-error>
+      </mat-form-field>
 
-          <div class="mb-4">
-          <label for="email" class="sr-only">Email address</label>
-          <input type="email" id="email" formControlName="email" class="  appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-primary focus:border-primary-light sm:text-sm" placeholder="Email address">
-          <div class="text-red-500 text-sm mt-1" *ngIf="registerForm.get('email')?.touched && registerForm.get('email')?.errors?.['required']">
-            Email is required
-          </div>
-          <div class="text-red-500 text-sm mt-1" *ngIf="registerForm.get('email')?.touched && registerForm.get('email')?.errors?.['email']">
-            Invalid email format
-          </div>
-          <div class="text-red-500 text-sm mt-1" *ngIf="emailInUse">
-            Email is already in use
-          </div>
-          </div>
+      <mat-form-field appearance="fill" class="full-width">
+        <mat-label>Confirm Password</mat-label>
+        <input matInput type="password" formControlName="confirmPassword" placeholder="••••••••" required>
+        <mat-error *ngIf="registerForm.get('confirmPassword')?.touched && registerForm.get('confirmPassword')?.errors?.['required']">
+          Confirm Password is required
+        </mat-error>
+        <mat-error *ngIf="registerForm.get('confirmPassword')?.touched && registerForm.hasError('passwordMismatch')">
+          Passwords do not match
+        </mat-error>
+      </mat-form-field>
 
-        </div>
+      <button mat-raised-button color="accent" type="submit" class="register-button" [disabled]="registerForm.invalid">
+        Register
+      </button>
 
-        <div class="mb-4">
-          <label for="password" class="sr-only">Password</label>
-          <input type="password" id="password" formControlName="password" class="appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-primary focus:border-primary-light sm:text-sm" placeholder="Password">
-          <div class="text-red-500 text-sm mt-1" *ngIf="registerForm.get('password')?.touched && registerForm.get('password')?.errors?.['required']">
-            Password is required
-          </div>
-        </div>
-
-
-        <div class="mb-4">
-          <label for="confirmPassword" class="sr-only">Confirm Password</label>
-          <input type="password" id="confirmPassword" formControlName="confirmPassword" class="appearance-none rounded-b-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-primary focus:border-primary-light sm:text-sm" placeholder="Confirm Password">
-          <div class="text-red-500 text-sm mt-1" *ngIf="registerForm.get('confirmPassword')?.touched && registerForm.get('confirmPassword')?.errors?.['required']">
-            Confirm Password is required
-          </div>
-          <div class="text-red-500 text-sm mt-1" *ngIf="registerForm.get('confirmPassword')?.touched && registerForm.hasError('passwordMismatch')">
-            Passwords do not match
-          </div>
-        </div>
-
-
-      <div>
-        <button type="submit" class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-primary-dark hover:bg-primary focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary" [disabled]="registerForm.invalid">
-          Register
-        </button>
+      <div class="login-link">
+        <span>Already have an account? </span>
+        <a routerLink="/login" class="link">Login here</a>
       </div>
     </form>
-
-    <div class="text-center">
-      <a routerLink="/login" class="text-primary-dark hover:text-primary">Login here</a>
-    </div>
   </div>
-
 </div>

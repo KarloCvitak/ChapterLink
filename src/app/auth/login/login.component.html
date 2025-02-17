@@ -1,40 +1,38 @@
-<div class="min-h-screen flex items-center justify-center bg-primary-light py-12 px-4 sm:px-6 lg:px-8">
-  <div class="max-w-md w-full space-y-8">
-    <div>
-      <h1 class="text-4xl font-logo text-primary-dark text-center">ChapterLink</h1>
-      <h2 class="mt-6 text-center text-2xl font-extrabold text-gray-900">Login</h2>
+<!-- login.component.html -->
+<div class="login-container">
+  <div class="login-box">
+    <div class="header">
+      <h1 class="logo">ChapterLink</h1>
+      <h2 class="subtitle">Connect with fellow book lovers</h2>
     </div>
-    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="mt-8 space-y-6">
-      <div *ngIf="errorMessage" class="text-red-500 text-sm text-center mb-4">
-        {{ errorMessage }}
-      </div>
-      <div class="rounded-md shadow-sm -space-y-px">
-        <div class="mb-4">
-          <label for="email" class="sr-only">Email address</label>
-          <input type="email" id="email" formControlName="email" class="appearance-none rounded-t-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-primary focus:border-primary-light sm:text-sm" placeholder="Email address">
-          <div class="text-red-500 text-sm mt-1" *ngIf="loginForm.get('email')?.touched && loginForm.get('email')?.errors?.['required']">
-            Email is required
-          </div>
-          <div class="text-red-500 text-sm mt-1" *ngIf="loginForm.get('email')?.touched && loginForm.get('email')?.errors?.['email']">
-            Invalid email format
-          </div>
-        </div>
-        <div class="mb-4">
-          <label for="password" class="sr-only">Password</label>
-          <input type="password" id="password" formControlName="password" class="appearance-none rounded-b-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-primary focus:border-primary-light sm:text-sm" placeholder="Password">
-          <div class="text-red-500 text-sm mt-1" *ngIf="loginForm.get('password')?.touched && loginForm.get('password')?.errors?.['required']">
-            Password is required
-          </div>
-        </div>
-      </div>
-      <div>
-        <button type="submit" class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-primary-dark hover:bg-primary focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary" [disabled]="loginForm.invalid">
-          Login
-        </button>
+
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="form">
+      <mat-form-field appearance="fill" class="full-width">
+        <mat-label>Email address</mat-label>
+        <input matInput type="email" formControlName="email" placeholder="you@example.com" required>
+        <mat-error *ngIf="loginForm.get('email')?.touched && loginForm.get('email')?.errors?.['required']">
+          Email is required
+        </mat-error>
+        <mat-error *ngIf="loginForm.get('email')?.touched && loginForm.get('email')?.errors?.['email']">
+          Invalid email format
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field appearance="fill" class="full-width">
+        <mat-label>Password</mat-label>
+        <input matInput type="password" formControlName="password" placeholder="••••••••" required>
+        <mat-error *ngIf="loginForm.get('password')?.touched && loginForm.get('password')?.errors?.['required']">
+          Password is required
+        </mat-error>
+      </mat-form-field>
+
+      <button mat-raised-button color="accent" type="submit" class="login-button" [disabled]="loginForm.invalid">
+        Login
+      </button>
+
+      <div class="register-link">
+        <span>New to ChapterLink? </span>
+        <a routerLink="/register" class="link">Join now</a>
       </div>
     </form>
-    <div class="mt-4 text-center">
-      <a routerLink="/register" class="text-primary-dark hover:text-primary">Register here</a>
-    </div>
   </div>
 </div>

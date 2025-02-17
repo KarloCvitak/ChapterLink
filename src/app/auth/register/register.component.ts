@@ -1,24 +1,28 @@
-import { Component } from '@angular/core';
+import {AfterViewInit, Component, HostBinding, OnInit, Renderer2} from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth-services/auth.service';
 import { PasswordMatchValidator } from '../../validators/passwowrd-match.validator';
 import {UserService} from "../../services/user-services/user.service";
+import {animate, state, style, transition, trigger} from "@angular/animations";
 
 @Component({
   selector: 'app-register',
-  templateUrl: './register.component.html'
+  templateUrl: './register.component.html',
+  styleUrls: ['./register.component.css'],
 })
-export class RegisterComponent {
+
+export class RegisterComponent{
   registerForm: FormGroup;
   usernameInUse = false;
   emailInUse = false;
 
+
   constructor(private fb: FormBuilder,
               private authService: AuthService,
               private router: Router,
-              private userService: UserService) {
-
+              private userService: UserService,
+              private renderer: Renderer2) {
 
     this.registerForm = this.fb.group({
       username: ['', Validators.required],

@@ -24,6 +24,13 @@ import { CriticDetailsComponent } from './components/user-components/critic-deta
 import { CreatingListComponent } from './components/user-components/creating-list/creating-list.component';
 import { CustomListsComponent } from './components/user-components/custom-lists/custom-lists.component';
 import { UserRoleDashboardComponent } from './components/admin-components/user-role-dashboard/user-role-dashboard.component';
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
+import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
+import {MatError, MatFormFieldModule} from "@angular/material/form-field";
+import {MatInputModule} from "@angular/material/input";
+import {MatButtonModule} from "@angular/material/button";
+import {MatCardModule} from "@angular/material/card";
+import {MatSelectModule} from "@angular/material/select";
 
 @NgModule({
   declarations: [
@@ -48,11 +55,21 @@ import { UserRoleDashboardComponent } from './components/admin-components/user-r
     HttpClientModule,
     AuthModule,
     FormsModule,
-    FontAwesomeModule
+    FontAwesomeModule,
+    BrowserModule,
+    BrowserAnimationsModule,
+    ReactiveFormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule,
+    MatCardModule,
+    MatSelectModule,
+    MatError
   ],
   providers: [AuthService,
     AuthenticationGuard,
-    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }],
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+    provideAnimationsAsync()],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

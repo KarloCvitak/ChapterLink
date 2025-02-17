@@ -1,3 +1,77 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+.login-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f5e1f7, #ffe4e1);
+  padding: 20px;
+}
+
+.login-box {
+  max-width: 400px;
+  width: 100%;
+  background-color: #fff;
+  padding: 30px;
+  border-radius: 20px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  text-align: center;
+}
+
+.logo {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #6a0dad;
+  margin-bottom: 10px;
+}
+
+.subtitle {
+  font-size: 1.2rem;
+  color: #9b59b6;
+  margin-bottom: 20px;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.full-width {
+  width: 100%;
+}
+
+mat-form-field {
+  width: 100%;  /* Ensure mat-form-field takes full width */
+  margin: 0;  /* Remove any margin that might be causing misalignment */
+  position: relative;
+}
+
+input.mat-input-element {
+  width: 100%;  /* Make sure the input field fills the available space */
+  padding: 10px;  /* Add some padding to prevent input text from touching the edges */
+}
+
+.login-button {
+  padding: 14px;
+  font-size: 1rem;
+  border-radius: 25px;
+  transition: box-shadow 0.3s;
+}
+
+.login-button:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.register-link {
+  margin-top: 20px;
+  font-size: 0.9rem;
+}
+
+.link {
+  color: #8e44ad;
+  text-decoration: none;
+}
+
+.link:hover {
+  text-decoration: underline;
+}
