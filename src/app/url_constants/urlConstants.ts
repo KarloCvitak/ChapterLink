@@ -11,6 +11,12 @@ export const BOOK_ENDPOINTS = {
 };
 
 export const COMMENTS_ENDPOINTS = {
-  COMMENT: `${API_BASE_URL}/api/comments/`,
-  COMMENT_REVIEW: `${API_BASE_URL}/api/critics/`
+  COMMENT: `${API_BASE_URL}/comments/`,
+  COMMENT_REVIEW: `${API_BASE_URL}/critics/`
 };
+
+export const FOLLOWING_ENDPOINTS = {
+  FOLLOWINGS: `${API_BASE_URL}/api/followings/`,
+  CHECK: `${API_BASE_URL}/followings/check/`
+};
+

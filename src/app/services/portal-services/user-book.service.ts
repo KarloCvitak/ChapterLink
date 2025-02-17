@@ -15,13 +15,6 @@ export class UserBookService {
   }
 
   addBookToUserStatus(userId: number | null, bookData: any, statusId: number): Observable<any> {
-    console.log(
-      "addBookToUserStatus userId:" +
-      userId +
-      " bookData " + JSON.stringify(bookData) +
-      " statusId "
-    );
-
     const userBookData = {
       user_id: userId,
       google_books_id: bookData.id,
@@ -33,13 +26,13 @@ export class UserBookService {
     };
     return this.http.post(`${this.apiUrl}`, userBookData);
   }
+
   getBookStatus(userId: number, googleBooksId: string): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}/status`, { params: { user_id: userId, google_books_id: googleBooksId } });
   }
   getBooksByStatus(userId: number | null, statusId: number | null): Observable<any> {
     return this.http.get(`${this.apiUrl}/user/${userId}/status/${statusId}`);
   }
-
   removeBookStatus(userId: number, bookId: string): Observable<any> {
     return this.http.delete(`${this.apiUrl}/${userId}/${bookId}/status`);
   }

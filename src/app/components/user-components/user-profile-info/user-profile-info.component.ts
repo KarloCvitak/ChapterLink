@@ -2,6 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { UserService } from '../../../services/user-services/user.service';
 import { ActivatedRoute } from '@angular/router';
 import { AuthService } from "../../../services/auth-services/auth.service";
+import {FollowingService} from "../../../services/portal-services/following.service";
 
 @Component({
   selector: 'app-user-profile-info',
@@ -20,7 +21,8 @@ export class UserProfileInfoComponent implements OnInit {
   newUsername: string = '';
 
   constructor(private userService: UserService,
-              private route: ActivatedRoute) {}
+              private route: ActivatedRoute,
+              private followService: FollowingService) {}
 
   ngOnInit(): void {
     this.currentUserId = this.userService.getCurrentUserId();
@@ -45,20 +47,20 @@ export class UserProfileInfoComponent implements OnInit {
   }
 
   checkIfFollowing(): void {
-    this.userService.checkIfFollowing(this.currentUserId, this.userId).subscribe(response => {
+    this.followService.checkIfFollowing(this.currentUserId, this.userId).subscribe(response => {
       this.isFollowing = response.isFollowing;
     });
   }
 
   follow(): void {
-    this.userService.followUser(this.currentUserId, this.userId).subscribe(() => {
+    this.followService.followUser(this.currentUserId, this.userId).subscribe(() => {
       this.isFollowing = true;
       this.user.followersCount = (this.user.followersCount || 0) + 1; // Update follower count
     });
   }
 
   unfollow(): void {
-    this.userService.unfollowUser(this.currentUserId, this.userId).subscribe(() => {
+    this.followService.unfollowUser(this.currentUserId, this.userId).subscribe(() => {
       this.isFollowing = false;
       this.user.followersCount = (this.user.followersCount || 1) - 1; // Update follower count
     });

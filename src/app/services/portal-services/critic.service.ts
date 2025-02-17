@@ -10,7 +10,6 @@ export class CriticService {
 
   constructor(private http: HttpClient) { }
 
-  // Get all reviews for a book
   getCriticsForBook(bookId: number): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}/book/${bookId}`);
   }

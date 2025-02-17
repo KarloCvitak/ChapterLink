@@ -21,18 +21,6 @@ export class UserService {
     return this.http.put(`${this.baseUrl}/users/${currentUserId}`, { username });
   }
 
-  followUser(followerId: number | null, followedId: number): Observable<any> {
-    return this.http.post(`${this.baseUrl}/followings`, { follower_id: followerId, followed_id: followedId });
-  }
-
-  unfollowUser(followerId: number | null, followedId: number): Observable<any> {
-    return this.http.delete(`${this.baseUrl}/followings`, { body: { follower_id: followerId, followed_id: followedId } });
-  }
-
-  checkIfFollowing(followerId: number | null, followedId: number): Observable<any> {
-    return this.http.get(`${this.baseUrl}/followings/check/${followerId}/${followedId}`);
-  }
-
   getCurrentUserId(): number | null {
     const token = this.tokenService.getToken();
 
@@ -42,6 +30,7 @@ export class UserService {
     return payload?.id || null;
   }
 
+  //TODO on backend move this to users
   checkUsernameEmail(username: string, email: string): Observable<any> {
     return this.http.post(`${this.baseUrl}/authenticate/check-username-email`, { username, email });
   }
