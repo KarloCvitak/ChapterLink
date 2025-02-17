@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import {TokenService} from "../auth-services/token.service";
 
 @Injectable({
   providedIn: 'root'
@@ -8,7 +9,7 @@ import { Observable } from 'rxjs';
 export class UserService {
   private baseUrl = 'http://localhost:3000/api';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private tokenService: TokenService) {}
 
   getUserById(userId: number | null): Observable<any> {
     return this.http.get(`${this.baseUrl}/users/${userId}`);
@@ -20,7 +21,6 @@ export class UserService {
     return this.http.put(`${this.baseUrl}/users/${currentUserId}`, { username });
   }
 
-
   followUser(followerId: number | null, followedId: number): Observable<any> {
     return this.http.post(`${this.baseUrl}/followings`, { follower_id: followerId, followed_id: followedId });
   }
@@ -31,5 +31,19 @@ export class UserService {
 
   checkIfFollowing(followerId: number | null, followedId: number): Observable<any> {
     return this.http.get(`${this.baseUrl}/followings/check/${followerId}/${followedId}`);
+  }
+
+  getCurrentUserId(): number | null {
+    const token = this.tokenService.getToken();
+    console.log("getCurrentUserId() token:", token);
+
+    if (!token) return null;
+
+    const payload = this.tokenService.parseToken(token);
+    return payload?.id || null;
+  }
+
+  checkUsernameEmail(username: string, email: string): Observable<any> {
+    return this.http.post(`${this.baseUrl}/authenticate/check-username-email`, { username, email });
   }
 }

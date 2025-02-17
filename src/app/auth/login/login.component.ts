@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { AuthService } from '../../services/auth.service';
+import { AuthService } from '../../services/auth-services/auth.service';
+import {TokenService} from "../../services/auth-services/token.service";
 
 @Component({
   selector: 'app-login',
@@ -11,7 +12,10 @@ export class LoginComponent {
   loginForm: FormGroup;
   errorMessage: string = '';
 
-  constructor(private fb: FormBuilder, private authService: AuthService, private router: Router) {
+  constructor(private fb: FormBuilder,
+              private authService: AuthService,
+              private tokenService: TokenService,
+              private router: Router) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', Validators.required]
@@ -24,7 +28,7 @@ export class LoginComponent {
       this.authService.login(this.loginForm.value).subscribe(response => {
         console.log('Login Response:', response);
         if (response && response.token) {
-          this.authService.setToken(response.token);
+          this.tokenService.setToken(response.token);
           console.log('Token Set:', response.token);
           this.router.navigate(['']);
         } else {

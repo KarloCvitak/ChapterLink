@@ -1,12 +1,12 @@
 import {Component, OnInit} from '@angular/core';
-import {UserBookService} from "../services/user-book.service";
-import {AuthService} from "../services/auth.service";
-import {CriticService} from "../services/critic.service";
+import {UserBookService} from "../../../services/portal-services/user-book.service";
+import {AuthService} from "../../../services/auth-services/auth.service";
+import {CriticService} from "../../../services/portal-services/critic.service";
 import {ActivatedRoute, Router} from "@angular/router";
-import {SearchService} from "../services/search.service";
-import {LikeService} from "../services/like.service";
-import {CustomListsService} from "../services/custom-lists.service";
-import {UserService} from "../services/user.service";
+import {SearchService} from "../../../services/portal-services/search.service";
+import {LikeService} from "../../../services/portal-services/like.service";
+import {CustomListsService} from "../../../services/portal-services/custom-lists.service";
+import {UserService} from "../../../services/user-services/user.service";
 
 @Component({
   selector: 'app-custom-lists',

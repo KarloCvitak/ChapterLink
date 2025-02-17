@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { CriticService } from '../services/critic.service';
-import { AuthService } from '../services/auth.service';
+import { CriticService } from '../../../services/portal-services/critic.service';
+import { AuthService } from '../../../services/auth-services/auth.service';
 import {ActivatedRoute, Router} from '@angular/router';
-import { SearchService } from '../services/search.service';
-import { CommentService } from '../services/comment.service';
-import {LikeService} from "../services/like.service";
-import {RoleService} from "../services/role.service";
+import { SearchService } from '../../../services/portal-services/search.service';
+import { CommentService } from '../../../services/portal-services/comment.service';
+import {LikeService} from "../../../services/portal-services/like.service";
+import {RoleService} from "../../../services/user-services/role.service";
+import {UserService} from "../../../services/user-services/user.service";
 
 @Component({
   selector: 'app-critic-details',
@@ -40,19 +41,18 @@ export class CriticDetailsComponent implements OnInit {
     private commentService: CommentService,
     private likesService: LikeService,
     private router: Router,
-    private roleService: RoleService
+    private roleService: RoleService,
+    private userService: UserService
   ) { }
 
   ngOnInit() {
-    this.userId = this.authService.getCurrentUserId();
+    this.userId = this.userService.getCurrentUserId();
     this.checkIfAdmin(this.userId);
     const criticId: number | null = Number(this.route.snapshot.paramMap.get('id'));
     if (criticId) {
       this.loadReviewDetails(criticId);
       this.loadComments(criticId);
       this.loadBookDetails(this.review.Book.google_books_id);
-
-
     }
   }
 

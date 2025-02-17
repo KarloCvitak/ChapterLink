@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { UserService } from '../services/user.service';
+import { UserService } from '../../../services/user-services/user.service';
 import { ActivatedRoute } from '@angular/router';
-import { AuthService } from "../services/auth.service";
+import { AuthService } from "../../../services/auth-services/auth.service";
 
 @Component({
   selector: 'app-user-profile-info',
@@ -9,6 +9,8 @@ import { AuthService } from "../services/auth.service";
   styleUrls: ['./user-profile-info.component.css']
 })
 export class UserProfileInfoComponent implements OnInit {
+
+
   @Input() userId: number = 1;
   user: any = {};
   isFollowing: boolean = false;
@@ -16,10 +18,12 @@ export class UserProfileInfoComponent implements OnInit {
   isOwnProfile: boolean = false;
   isEditing: boolean = false;
   newUsername: string = '';
-  constructor(private userService: UserService, private route: ActivatedRoute, private authService: AuthService) {}
+
+  constructor(private userService: UserService,
+              private route: ActivatedRoute) {}
 
   ngOnInit(): void {
-    this.currentUserId = this.authService.getCurrentUserId();
+    this.currentUserId = this.userService.getCurrentUserId();
     this.route.params.subscribe(params => {
       this.userId = params['id'];
       this.isOwnProfile = this.userId == this.currentUserId;
@@ -76,7 +80,7 @@ export class UserProfileInfoComponent implements OnInit {
 
 
   updateUsername(): void {
-    this.authService.checkUsernameEmail(this.newUsername, this.user.email).subscribe(response => {
+    this.userService.checkUsernameEmail(this.newUsername, this.user.email).subscribe(response => {
       if (!response.usernameInUse) {
         // Proceed with updating username
         this.userService.updateUsername(this.currentUserId, this.newUsername).subscribe(() => {

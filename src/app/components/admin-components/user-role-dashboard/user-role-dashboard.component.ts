@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { RoleService } from '../services/role.service'; // Adjust the path as necessary
+import { RoleService } from '../../../services/user-services/role.service'; // Adjust the path as necessary
 
 @Component({
   selector: 'app-user-role-dashboard',

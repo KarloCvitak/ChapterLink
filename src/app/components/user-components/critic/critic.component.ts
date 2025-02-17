@@ -1,12 +1,13 @@
 // critic.component.ts
 import { Component, Input, OnInit } from '@angular/core';
-import { CriticService } from '../services/critic.service';
-import { AuthService } from '../services/auth.service';
-import { UserBookService } from '../services/user-book.service';
-import { SearchService } from "../services/search.service";
-import { LikeService } from "../services/like.service";
+import { CriticService } from '../../../services/portal-services/critic.service';
+import { AuthService } from '../../../services/auth-services/auth.service';
+import { UserBookService } from '../../../services/portal-services/user-book.service';
+import { SearchService } from "../../../services/portal-services/search.service";
+import { LikeService } from "../../../services/portal-services/like.service";
 import {Router} from "@angular/router";
-import {RoleService} from "../services/role.service";
+import {RoleService} from "../../../services/user-services/role.service";
+import {UserService} from "../../../services/user-services/user.service";
 
 @Component({
   selector: 'app-critic',
@@ -34,7 +35,8 @@ export class CriticComponent implements OnInit {
     private likeService: LikeService,
     private bookService: UserBookService,
     private router: Router,
-    private roleService: RoleService
+    private roleService: RoleService,
+    private userService: UserService
   ) {}
 
   getUserInitials(username: string | null): string {
@@ -44,7 +46,7 @@ export class CriticComponent implements OnInit {
     return 'NA';  // Default value if username is null or empty
   }
   ngOnInit() {
-    this.userId = this.authService.getCurrentUserId();
+    this.userId = this.userService.getCurrentUserId();
     this.checkIfAdmin(this.userId);
     this.searchService.searchBookById(this.bookId).subscribe(book => {
       this.book = book;

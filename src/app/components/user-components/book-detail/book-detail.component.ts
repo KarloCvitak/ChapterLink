@@ -1,10 +1,11 @@
 
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { SearchService } from '../services/search.service';
-import { UserBookService } from '../services/user-book.service';
-import { AuthService } from '../services/auth.service';
-import {LikeService} from "../services/like.service";
+import { SearchService } from '../../../services/portal-services/search.service';
+import { UserBookService } from '../../../services/portal-services/user-book.service';
+import { AuthService } from '../../../services/auth-services/auth.service';
+import {LikeService} from "../../../services/portal-services/like.service";
+import {UserService} from "../../../services/user-services/user.service";
 
 @Component({
   selector: 'app-book-detail',
@@ -21,11 +22,12 @@ export class BookDetailComponent implements OnInit {
     private route: ActivatedRoute,
     private searchService: SearchService,
     private userBookService: UserBookService,
-    private authService: AuthService
+    private authService: AuthService,
+    private userService: UserService
   ) { }
 
   ngOnInit() {
-    this.userId = this.authService.getCurrentUserId();
+    this.userId = this.userService.getCurrentUserId();
     this.route.params.subscribe(params => {
       this.bookId = params['id'];
       this.searchService.searchBookById(this.bookId).subscribe(book => {

@@ -1,15 +1,15 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import {AuthenticationGuard} from "./auth/auth.guard";
-import {FeedComponent} from "./feed/feed.component";
-import {SearchResultsComponent} from "./search-results/search-results.component";
-import {BookDetailComponent} from "./book-detail/book-detail.component";
-import {ProfileComponent} from "./profile/profile.component";
-import {CriticDetailsComponent} from "./critic-details/critic-details.component";
-import {CreatingListComponent} from "./creating-list/creating-list.component";
-import {CustomListsService} from "./services/custom-lists.service";
-import {CustomListsComponent} from "./custom-lists/custom-lists.component";
-import {UserRoleDashboardComponent} from "./user-role-dashboard/user-role-dashboard.component";
+import {FeedComponent} from "./components/user-components/feed/feed.component";
+import {SearchResultsComponent} from "./components/user-components/search-results/search-results.component";
+import {BookDetailComponent} from "./components/user-components/book-detail/book-detail.component";
+import {ProfileComponent} from "./components/user-components/profile/profile.component";
+import {CriticDetailsComponent} from "./components/user-components/critic-details/critic-details.component";
+import {CreatingListComponent} from "./components/user-components/creating-list/creating-list.component";
+import {CustomListsService} from "./services/portal-services/custom-lists.service";
+import {CustomListsComponent} from "./components/user-components/custom-lists/custom-lists.component";
+import {UserRoleDashboardComponent} from "./components/admin-components/user-role-dashboard/user-role-dashboard.component";
 
 const routes: Routes = [
   { path: '', component: FeedComponent, canActivate: [AuthenticationGuard] },

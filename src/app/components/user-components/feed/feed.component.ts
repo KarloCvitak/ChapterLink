@@ -1,10 +1,11 @@
 import {Component, OnInit} from '@angular/core';
-import {FollowingService} from "../services/following.service";
-import {AuthService} from "../services/auth.service";
-import {RoleService} from "../services/role.service";
-import {CriticService} from "../services/critic.service";
-import {LikeService} from "../services/like.service";
+import {FollowingService} from "../../../services/portal-services/following.service";
+import {AuthService} from "../../../services/auth-services/auth.service";
+import {RoleService} from "../../../services/user-services/role.service";
+import {CriticService} from "../../../services/portal-services/critic.service";
+import {LikeService} from "../../../services/portal-services/like.service";
 import {Router} from "@angular/router";
+import {UserService} from "../../../services/user-services/user.service";
 
 @Component({
   selector: 'app-feed',
@@ -26,17 +27,20 @@ export class FeedComponent implements OnInit{
   userLikesMap: { [criticId: number]: boolean } = {};
 
 
-  constructor(private followingService: FollowingService, private authService: AuthService, private roleService : RoleService, private criticService: CriticService,
+  constructor(private followingService: FollowingService,
+              private authService: AuthService,
+              private roleService : RoleService,
+              private criticService: CriticService,
               private likesService: LikeService,
+              private userService: UserService,
+
               private router: Router) { }
 
 
   ngOnInit(): void {
-    this.currentUserId = this.authService.getCurrentUserId();
+    this.currentUserId = this.userService.getCurrentUserId();
     this.loadReviews();
     this.checkIfAdmin(this.currentUserId);
-
-
   }
 
   viewReviewDetails(criticId: number) {

@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { AuthService } from '../../services/auth.service';
+import { AuthService } from '../../services/auth-services/auth.service';
 import { PasswordMatchValidator } from '../../validators/passwowrd-match.validator';
+import {UserService} from "../../services/user-services/user.service";
 
 @Component({
   selector: 'app-register',
@@ -13,13 +14,19 @@ export class RegisterComponent {
   usernameInUse = false;
   emailInUse = false;
 
-  constructor(private fb: FormBuilder, private authService: AuthService, private router: Router) {
+  constructor(private fb: FormBuilder,
+              private authService: AuthService,
+              private router: Router,
+              private userService: UserService) {
+
+
     this.registerForm = this.fb.group({
       username: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
       password: ['', Validators.required],
       confirmPassword: ['', Validators.required]
     }, { validators: PasswordMatchValidator }); // Apply the validator here
+
   }
 
   onSubmit() {
@@ -27,7 +34,7 @@ export class RegisterComponent {
       const { username, email, password } = this.registerForm.value;
 
       // Check username and email availability
-      this.authService.checkUsernameEmail(username, email).subscribe(response => {
+      this.userService.checkUsernameEmail(username, email).subscribe(response => {
         this.usernameInUse = response.usernameInUse;
         this.emailInUse = response.emailInUse;
 

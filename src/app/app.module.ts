@@ -8,22 +8,22 @@ import { RegisterComponent } from './auth/register/register.component';
 import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
 import {AuthInterceptor} from "./auth/auth-interceptor";
 import {AuthenticationGuard} from "./auth/auth.guard";
-import {AuthService} from "./services/auth.service";
+import {AuthService} from "./services/auth-services/auth.service";
 import {AuthModule} from "./auth/auth.module";
-import { FeedComponent } from './feed/feed.component';
+import { FeedComponent } from './components/user-components/feed/feed.component';
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
-import { NavBarComponent } from './nav-bar/nav-bar.component';
-import { SearchResultsComponent } from './search-results/search-results.component';
-import { SearchBarComponent } from './search-bar/search-bar.component';
-import { BookDetailComponent } from './book-detail/book-detail.component';
-import { ProfileComponent } from './profile/profile.component';
-import { UserProfileInfoComponent } from './user-profile-info/user-profile-info.component';
-import { CriticComponent } from './critic/critic.component';
+import { NavBarComponent } from './components/user-components/nav-bar/nav-bar.component';
+import { SearchResultsComponent } from './components/user-components/search-results/search-results.component';
+import { SearchBarComponent } from './components/user-components/search-bar/search-bar.component';
+import { BookDetailComponent } from './components/user-components/book-detail/book-detail.component';
+import { ProfileComponent } from './components/user-components/profile/profile.component';
+import { UserProfileInfoComponent } from './components/user-components/user-profile-info/user-profile-info.component';
+import { CriticComponent } from './components/user-components/critic/critic.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { CriticDetailsComponent } from './critic-details/critic-details.component';
-import { CreatingListComponent } from './creating-list/creating-list.component';
-import { CustomListsComponent } from './custom-lists/custom-lists.component';
-import { UserRoleDashboardComponent } from './user-role-dashboard/user-role-dashboard.component';
+import { CriticDetailsComponent } from './components/user-components/critic-details/critic-details.component';
+import { CreatingListComponent } from './components/user-components/creating-list/creating-list.component';
+import { CustomListsComponent } from './components/user-components/custom-lists/custom-lists.component';
+import { UserRoleDashboardComponent } from './components/admin-components/user-role-dashboard/user-role-dashboard.component';
 
 @NgModule({
   declarations: [

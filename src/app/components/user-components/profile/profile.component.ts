@@ -1,13 +1,13 @@
 import { Component, OnInit } from '@angular/core';
-import { UserBookService } from '../services/user-book.service';
-import { AuthService } from '../services/auth.service';
-import { CriticService } from '../services/critic.service';
+import { UserBookService } from '../../../services/portal-services/user-book.service';
+import { AuthService } from '../../../services/auth-services/auth.service';
+import { CriticService } from '../../../services/portal-services/critic.service';
 import { Router, ActivatedRoute } from '@angular/router';
-import { SearchService } from '../services/search.service';
-import { LikeService } from '../services/like.service';
-import { CustomListsService } from '../services/custom-lists.service';
-import {UserService} from "../services/user.service";
-import {RoleService} from "../services/role.service";
+import { SearchService } from '../../../services/portal-services/search.service';
+import { LikeService } from '../../../services/portal-services/like.service';
+import { CustomListsService } from '../../../services/portal-services/custom-lists.service';
+import {UserService} from "../../../services/user-services/user.service";
+import {RoleService} from "../../../services/user-services/role.service";
 
 @Component({
   selector: 'app-profile',
@@ -49,7 +49,7 @@ export class ProfileComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.currentUserId = this.authService.getCurrentUserId();
+    this.currentUserId = this.userService.getCurrentUserId();
     this.route.params.subscribe(params => {
       this.userId = +params['id']; // Retrieve user ID from route parameters
 

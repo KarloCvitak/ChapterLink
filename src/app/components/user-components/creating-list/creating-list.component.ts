@@ -1,11 +1,12 @@
 import {Component, OnInit} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
-import { SearchService } from '../services/search.service';
+import { SearchService } from '../../../services/portal-services/search.service';
 import { Subject } from 'rxjs';
 import { debounceTime, takeUntil } from 'rxjs/operators';
-import { BookService } from '../services/book.service';
-import {AuthService} from "../services/auth.service";
+import { BookService } from '../../../services/portal-services/book.service';
+import {AuthService} from "../../../services/auth-services/auth.service";
+import {UserService} from "../../../services/user-services/user.service";
 
 @Component({
   selector: 'app-creating-list',
@@ -34,7 +35,8 @@ export class CreatingListComponent implements OnInit{
     private router: Router,
     private route: ActivatedRoute,
     private bookService: BookService,
-    private authService: AuthService
+    private authService: AuthService,
+    private userService: UserService
   ) {
     this.searchTerms$.pipe(
       debounceTime(300),
@@ -45,7 +47,7 @@ export class CreatingListComponent implements OnInit{
   }
 
   ngOnInit() {
-    this.userId = this.authService.getCurrentUserId();
+    this.userId = this.userService.getCurrentUserId();
   }
 
 
