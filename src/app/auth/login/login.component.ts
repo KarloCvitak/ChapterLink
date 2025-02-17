@@ -26,10 +26,8 @@ export class LoginComponent {
     console.log('Form Submitted', this.loginForm.value);
     if (this.loginForm.valid) {
       this.authService.login(this.loginForm.value).subscribe(response => {
-        console.log('Login Response:', response);
         if (response && response.token) {
           this.tokenService.setToken(response.token);
-          console.log('Token Set:', response.token);
           this.router.navigate(['']);
         } else {
           this.errorMessage = 'Invalid login response';

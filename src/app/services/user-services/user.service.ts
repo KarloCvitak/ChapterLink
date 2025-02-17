@@ -35,7 +35,6 @@ export class UserService {
 
   getCurrentUserId(): number | null {
     const token = this.tokenService.getToken();
-    console.log("getCurrentUserId() token:", token);
 
     if (!token) return null;
 

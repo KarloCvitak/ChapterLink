@@ -19,7 +19,6 @@ export class NavBarComponent {
   }
   ngOnInit(): void {
     this.userId = this.userService.getCurrentUserId();
-    console.log("NAV-BAR COMPONENT INIT" + this.userId)
   }
 
   logout() {

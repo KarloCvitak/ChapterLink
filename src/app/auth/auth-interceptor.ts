@@ -13,7 +13,6 @@ export class AuthInterceptor implements HttpInterceptor {
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     const token = this.tokenService.getToken();
-    console.log('Token:', token);
 
     // Bypass token attachment for Google Books API requests
     if (request.url.includes('googleapis.com')) {
