@@ -14,7 +14,8 @@ export class UserProfileInfoComponent implements OnInit {
   isFollowing: boolean = false;
   currentUserId: number | null = 1;
   isOwnProfile: boolean = false;
-
+  isEditing: boolean = false;
+  newUsername: string = '';
   constructor(private userService: UserService, private route: ActivatedRoute, private authService: AuthService) {}
 
   ngOnInit(): void {
@@ -58,4 +59,37 @@ export class UserProfileInfoComponent implements OnInit {
       this.user.followersCount = (this.user.followersCount || 1) - 1; // Update follower count
     });
   }
+
+  getUserInitials(username: string | null): string {
+    if (username) {
+      return username.slice(0, 2).toUpperCase();
+    }
+    return 'NA';  // Default value if username is null or empty
+  }
+
+  toggleEdit(show: boolean = true): void {
+    this.isEditing = show;
+    if (!show) {
+      this.newUsername = ''; // Clear new username when hiding the form
+    }
+  }
+
+
+  updateUsername(): void {
+    this.authService.checkUsernameEmail(this.newUsername, this.user.email).subscribe(response => {
+      if (!response.usernameInUse) {
+        // Proceed with updating username
+        this.userService.updateUsername(this.currentUserId, this.newUsername).subscribe(() => {
+          this.user.username = this.newUsername;
+          this.toggleEdit(false); // Hide form after updating
+        }, error => {
+          console.error('Error updating username:', error);
+        });
+      } else {
+        // Handle case where username is already in use
+        alert('Username is already taken.');
+      }
+    });
+  }
+
 }

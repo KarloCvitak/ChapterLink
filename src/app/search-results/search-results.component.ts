@@ -14,6 +14,10 @@ export class SearchResultsComponent implements OnInit {
   lists: any[] = [];
   currentFilter: string = 'all'; // Default to show all results initially
 
+  filteredBooks: any[] = [];
+  genres: string[] = [];
+  selectedGenre: string = '';
+
   constructor(private route: ActivatedRoute, private searchService: SearchService, private router: Router) { }
 
   ngOnInit() {
@@ -22,6 +26,8 @@ export class SearchResultsComponent implements OnInit {
       this.searchService.searchBooks(this.query).subscribe(books => {
         if (books && Array.isArray(books.items)) {
           this.books = books.items;
+          this.filteredBooks = this.books;
+          this.prepareGenres();
         } else {
           console.error('Error: books.items is not an array:', books);
         }
@@ -66,4 +72,26 @@ export class SearchResultsComponent implements OnInit {
       this.router.navigate(['/book', item.id]);
     }
   }
+
+
+  prepareGenres() {
+    const genreSet = new Set<string>();
+    this.books.forEach(book => {
+      if (book.volumeInfo.categories) {
+        book.volumeInfo.categories.forEach((category: string) => genreSet.add(category));
+      }
+    });
+    this.genres = Array.from(genreSet);
+  }
+
+  filterBooksByGenre() {
+    if (this.selectedGenre) {
+      this.filteredBooks = this.books.filter(book =>
+        book.volumeInfo.categories && book.volumeInfo.categories.includes(this.selectedGenre)
+      );
+    } else {
+      this.filteredBooks = this.books;
+    }
+  }
+
 }

@@ -21,9 +21,6 @@ export class LoginComponent {
   onSubmit() {
     console.log('Form Submitted', this.loginForm.value);
     if (this.loginForm.valid) {
-
-     // console.log(this.loginForm.value.params);
-
       this.authService.login(this.loginForm.value).subscribe(response => {
         console.log('Login Response:', response);
         if (response && response.token) {

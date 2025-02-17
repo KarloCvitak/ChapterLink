@@ -19,33 +19,24 @@ export class CriticService {
     return this.http.get<any>(`${this.apiUrl}/user/${userId}`);
   }
 
-
   getCriticsForBookByGoogleID(googleBookId: number): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}/googleBooks/${googleBookId}`);
   }
-
 
   getCriticById(criticId: number | null): Observable<any> {
     return this.http.get(`${this.apiUrl}/${criticId}`);
   }
 
-  // Add a new review
   addCritic(criticData: any): Observable<any> {
     return this.http.post<any>(this.apiUrl, criticData);
   }
 
-  // Update an existing review
   updateCritic(criticId: number, criticData: any): Observable<any> {
     return this.http.put<any>(`${this.apiUrl}/${criticId}`, criticData);
   }
 
-  // Delete a review
   deleteCritic(criticId: number): Observable<any> {
     return this.http.delete<any>(`${this.apiUrl}/${criticId}`);
   }
 
-  // Get reviews by a specific user
-  getReviewsByUser(userId: number): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/user/${userId}`);
-  }
 }

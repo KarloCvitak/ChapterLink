@@ -25,14 +25,31 @@
 
   <!-- Display filtered results based on selected filter -->
   <div class="grid grid-cols-3 gap-8">
+
+
+
+
+
     <!-- Books Column -->
     <div *ngIf="currentFilter === 'books' || currentFilter === 'all'">
       <h3 class="text-xl font-semibold mb-2">Books</h3>
+
+      <!-- Genre Filter Dropdown -->
+      <div class="mb-4">
+        <label for="genreFilter" class="block text-lg font-medium mb-2">Filter by Genre:</label>
+        <select id="genreFilter" [(ngModel)]="selectedGenre" (change)="filterBooksByGenre()"
+                class="w-full p-2 border rounded">
+          <option value="">All Genres</option>
+          <option *ngFor="let genre of genres" [value]="genre">{{ genre }}</option>
+        </select>
+      </div>
+
+
       <ul>
         <li *ngIf="books.length === 0" class="mb-4">
           <p class="text-lg text-gray-600">No books found</p>
         </li>
-        <li *ngFor="let book of books" (click)="onSelectItem(book)" class="mb-4 flex items-start cursor-pointer hover:bg-gray-100 p-2 rounded">
+        <li *ngFor="let book of filteredBooks" (click)="onSelectItem(book)" class="mb-4 flex items-start cursor-pointer hover:bg-gray-100 p-2 rounded">
           <a class="flex items-start">
             <!-- Display book cover -->
             <img *ngIf="book.volumeInfo.imageLinks?.thumbnail" [src]="book.volumeInfo.imageLinks.thumbnail" alt="Book Cover" class="w-16 h-auto mr-4">

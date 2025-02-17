@@ -1,25 +1,29 @@
 <app-nav-bar></app-nav-bar>
 
-<div class="flex flex-col items-center bg-gray-100 min-h-screen">
+<div class="flex flex-col items-center bg-gray-100 min-h-screen py-6 px-4">
 
   <app-user-profile-info></app-user-profile-info>
 
   <!-- Admin Dashboard Button -->
-  <div *ngIf="isAdmin" class="flex justify-center mt-6">
+  <div *ngIf="isAdmin" class="flex p-2 justify-center mt-6">
     <button
-      class="px-6 py-3 bg-blue-500 text-white rounded-full shadow-md hover:bg-blue-600 transition transform hover:-translate-y-1"
+      class="px-6 py-3 bg-blue-500 text-white rounded-full shadow-lg hover:bg-blue-600 transition transform hover:-translate-y-1"
       routerLink="/user-role-dashboard"
     >
       Admin Dashboard
     </button>
   </div>
 
-  <div class="flex justify-center items-start p-4 w-full">
-    <div class="max-w-6xl w-full p-6 bg-white rounded-lg shadow-lg">
+  <!-- Main Content Area -->
+  <div class="flex flex-col items-center w-full">
+
+    <div class="max-w-6xl w-full bg-white rounded-lg shadow-lg p-6">
+      <h2 class="text-3xl font-semibold mb-6 text-center"> What's {{user.username}} reading</h2>
+
       <!-- Filter Buttons -->
-      <div class="mt-6 flex justify-center space-x-4">
+      <div class="flex justify-center space-x-4 mb-6">
         <button
-          class="px-4 py-2 rounded"
+          class="px-4 py-2 rounded-lg font-semibold transition"
           [ngClass]="{
             'bg-blue-600 text-white': isActive(1),
             'bg-blue-500 text-white hover:bg-blue-600': !isActive(1)
@@ -29,7 +33,7 @@
           Currently Reading
         </button>
         <button
-          class="px-4 py-2 rounded"
+          class="px-4 py-2 rounded-lg font-semibold transition"
           [ngClass]="{
             'bg-green-600 text-white': isActive(2),
             'bg-green-500 text-white hover:bg-green-600': !isActive(2)
@@ -39,7 +43,7 @@
           Read
         </button>
         <button
-          class="px-4 py-2 rounded"
+          class="px-4 py-2 rounded-lg font-semibold transition"
           [ngClass]="{
             'bg-yellow-600 text-white': isActive(3),
             'bg-yellow-500 text-white hover:bg-yellow-600': !isActive(3)
@@ -51,20 +55,20 @@
       </div>
 
       <!-- Books List -->
-      <div class="mt-6">
+      <div>
         <div *ngIf="books.length === 0" class="text-center text-lg text-gray-600">
           No books found for this status
         </div>
         <ul *ngIf="books.length > 0" class="space-y-4">
           <li *ngFor="let book of books"
               (click)="onSelectBook(book)"
-              class="flex items-start cursor-pointer bg-gray-100 p-4 rounded-lg shadow-md hover:bg-gray-200 transition">
+              class="flex items-start cursor-pointer bg-white p-4 rounded-lg shadow-md hover:bg-gray-100 transition">
             <img *ngIf="book.Book.cover_image"
                  [src]="book.Book.cover_image"
                  alt="Book Cover"
                  class="w-16 h-auto mr-4 rounded-lg shadow-md">
             <div>
-              <h2 class="text-xl font-bold">{{ book.Book.title }}</h2>
+              <h2 class="text-xl font-semibold">{{ book.Book.title }}</h2>
               <p class="text-gray-700">{{ book.Book.authors }}</p>
             </div>
           </li>
@@ -73,98 +77,137 @@
 
       <!-- Custom Lists Section -->
       <div class="mt-6">
-        <div class="flex justify-between items-center">
-          <h2 class="text-2xl font-bold mb-4">Custom Lists</h2>
+        <h2 class="text-3xl font-semibold mb-6 text-center"> {{user.username}}'s lists </h2>
+        <div class="flex justify-between items-center mb-4">
           <button
             *ngIf="userId === currentUserId"
             (click)="navigateToCreateList()"
-            class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+            class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition"
           >
             Create New List
           </button>
         </div>
         <ul *ngIf="lists.length > 0" class="space-y-4">
-          <li *ngFor="let list of lists" class="bg-gray-100 p-4 rounded-lg shadow-md">
+          <li *ngFor="let list of lists" class="bg-white p-4 rounded-lg shadow-md">
             <div class="flex justify-between items-center">
-              <div class="cursor-pointer" (click)="viewListDetails(list.list_id)">
-                <h3 class="text-xl font-bold">{{ list.title }}</h3>
+              <div class="flex-1 cursor-pointer" (click)="viewListDetails(list.list_id)">
+                <h3 class="text-xl font-semibold">{{ list.title }}</h3>
                 <p class="text-gray-700">{{ list.description }}</p>
               </div>
-              <button (click)="viewListDetails(list.list_id)" class="px-2 py-1 bg-yellow-500 text-white rounded hover:bg-yellow-600">View</button>
-
-              <div *ngIf="list.user_id === currentUserId" class="flex space-x-2">
-                <button (click)="deleteList(list.list_id)" class="px-2 py-1 bg-red-500 text-white rounded hover:bg-red-600">Delete</button>
+              <button (click)="viewListDetails(list.list_id)" class="px-2 mr-2 py-1 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 transition">View</button>
+              <div *ngIf="list.user_id === currentUserId || isAdmin" class="flex space-x-2">
+                <button (click)="deleteList(list.list_id)" class="px-2 py-1 bg-red-500 text-white rounded-lg hover:bg-red-600 transition">Delete</button>
               </div>
             </div>
           </li>
         </ul>
-        <div *ngIf="lists.length === 0" class="text-center text-lg text-gray-600">
+        <div *ngIf="lists.length === 0" class="text-center text-lg text-gray-600 mt-6">
           No custom lists found.
         </div>
       </div>
 
       <!-- User Reviews Section -->
       <div class="mt-6">
-        <h2 class="text-2xl font-bold mb-4">User Reviews</h2>
-        <ul *ngIf="reviews.length > 0" class="space-y-4">
-          <li *ngFor="let review of reviews" class="bg-gray-100 p-4 rounded-lg shadow-md">
-            <div class="flex justify-between items-center">
-              <div>
-                <h3 class="text-xl font-bold">{{ bookDetails[review.Book.book_id]?.title || review.Book.title }}</h3>
-                <p class="text-gray-700">{{ review.review_text }}</p>
-                <p class="text-gray-500 text-sm">{{ review.created_at | date }}</p>
-                <div class="flex items-center mt-2">
-                  <button
-                    (click)="toggleLike(review.critic_id)"
-                    class="flex items-center text-gray-500 hover:text-gray-700"
-                  >
-                    <span [ngClass]="userLikesMap[review.critic_id] ? 'text-red-500' : ''">
+        <h2 class="text-3xl font-semibold mb-6 text-center">{{user.username}}'s reviews</h2>
+        <ul *ngIf="reviews.length > 0" class="space-y-6">
+          <li *ngFor="let review of reviews" class="bg-white p-6 rounded-lg shadow-lg flex flex-col">
+            <!-- Book Cover -->
+            <div *ngIf="bookDetails[review.Book.book_id]?.volumeInfo.imageLinks?.thumbnail" class="flex-shrink-0 mb-4">
+              <img [src]="bookDetails[review.Book.book_id]?.volumeInfo.imageLinks?.thumbnail"
+                   alt="Book Cover"
+                   class="w-24 h-32 object-cover rounded-lg shadow-md">
+            </div>
+            <!-- Review Content -->
+            <div class="flex-1">
+              <div class="flex justify-between items-start mb-4">
+                <div class="flex-1">
+                  <a [routerLink]="['/book', review.Book.google_books_id]" class="block text-xl font-semibold text-blue-600 hover:underline">
+                    {{ bookDetails[review.Book.book_id]?.title || review.Book.title }}
+                  </a>
+                  <p class="text-gray-700 mt-2">{{ review.review_text }}</p>
+                  <div class="flex mt-2">
+                    <ng-container *ngFor="let star of getStarsArray(review.rating); let i = index">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        [class.text-yellow-500]="i < review.rating"
+                        [class.text-gray-300]="i >= review.rating"
+                        class="h-5 w-5"
+                        viewBox="0 0 20 20"
+                        fill="currentColor"
+                      >
+                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.15 3.535h3.717c.969 0 1.371 1.24.588 1.81l-3.005 2.18 1.15 3.536c.3.921-.755 1.688-1.539 1.105L10 13.011l-3.004 2.182c-.783.584-1.838-.184-1.539-1.105l1.15-3.536-3.004-2.18c-.783-.57-.38-1.81.588-1.81h3.717l1.15-3.535z" />
+                      </svg>
+                    </ng-container>
+                  </div>
+                  <div class="flex items-center mt-4 space-x-3">
+                    <!-- Like Button and Count -->
+                    <button
+                      (click)="toggleLike(review.critic_id)"
+                      class="flex items-center text-gray-500 hover:text-red-500 transition-colors"
+                    >
                       <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M5 15l7-7 7 7" />
                       </svg>
+                      <span class="ml-2">{{ likesCountMap[review.critic_id] || 0 }}</span>
+                    </button>
+                    <span
+                      class="ml-2 text-sm text-gray-500 hover:text-gray-700 cursor-pointer relative"
+                      (mouseenter)="toggleHover(review.critic_id, true)"
+                      (mouseleave)="toggleHover(review.critic_id, false)"
+                    >
+                      {{ likesCountMap[review.critic_id] || 0 }} like(s)
+                      <div *ngIf="hoverState[review.critic_id]" class="absolute bg-white shadow-lg rounded-lg p-4 mt-2 w-48">
+                        <h4 class="font-bold mb-2">Liked by:</h4>
+                        <ul>
+                          <li *ngFor="let user of likesUserMap[review.critic_id]">
+                            {{ user.username }}
+                          </li>
+                        </ul>
+                      </div>
                     </span>
-                    <span class="ml-1">{{ likesCountMap[review.critic_id] || 0 }}</span>
-                  </button>
-                  <span
-                    class="ml-2 text-sm text-gray-500 hover:text-gray-700 cursor-pointer"
-                    (mouseenter)="toggleHover(review.critic_id, true)"
-                    (mouseleave)="toggleHover(review.critic_id, false)"
-                  >
-                    {{ likesCountMap[review.critic_id] || 0 }} like(s)
-                    <div *ngIf="hoverState[review.critic_id]" class="absolute bg-white shadow-lg rounded-lg p-4 mt-2">
-                      <h4 class="font-bold mb-2">Liked by:</h4>
-                      <ul>
-                        <li *ngFor="let user of likesUserMap[review.critic_id]">
-                          {{ user.username }}
-                        </li>
-                      </ul>
-                    </div>
-                  </span>
+                  </div>
+                </div>
+                <div *ngIf="review.user_id === currentUserId || isAdmin" class="flex space-x-2">
+                  <button (click)="editReview(review)" class="px-3 py-1 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 transition">Edit</button>
+                  <button (click)="deleteReview(review.critic_id)" class="px-3 py-1 bg-red-500 text-white rounded-lg hover:bg-red-600 transition">Delete</button>
                 </div>
               </div>
-              <div *ngIf="review.user_id === currentUserId" class="flex space-x-2">
-                <button (click)="editReview(review)" class="px-2 py-1 bg-yellow-500 text-white rounded hover:bg-yellow-600">Edit</button>
-                <button (click)="deleteReview(review.critic_id)" class="px-2 py-1 bg-red-500 text-white rounded hover:bg-red-600">Delete</button>
-              </div>
-            </div>
 
-            <button
-              (click)="viewReviewDetails(review.critic_id)"
-              class="px-2 py-1 bg-blue-500 text-white rounded hover:bg-blue-600"
-            >
-              View Details
-            </button>
+              <button
+                (click)="viewReviewDetails(review.critic_id)"
+                class="mt-4 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition"
+              >
+                View Details
+              </button>
 
-            <div *ngIf="editingReview && editingReview.critic_id === review.critic_id">
-              <textarea [(ngModel)]="editingReview.review_text" class="w-full mt-2 p-2 border border-gray-300 rounded"></textarea>
-              <div class="flex space-x-2 mt-2">
-                <button (click)="updateReview()" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">Update</button>
-                <button (click)="cancelEdit()" class="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600">Cancel</button>
+              <!-- Editing Review -->
+              <div *ngIf="editingReview && editingReview.critic_id === review.critic_id" class="mt-4">
+                <textarea [(ngModel)]="editingReview.review_text" class="w-full p-3 border border-gray-300 rounded-lg mb-2" placeholder="Edit your review"></textarea>
+                <div class="flex items-center space-x-2 mb-2">
+                  <!-- Editable Star Rating -->
+                  <ng-container *ngFor="let star of [1, 2, 3, 4, 5]; let i = index">
+                    <svg
+                      (click)="editingReview.rating = i + 1"
+                      xmlns="http://www.w3.org/2000/svg"
+                      [class.text-yellow-500]="i < editingReview.rating"
+                      [class.text-gray-300]="i >= editingReview.rating"
+                      class="h-6 w-6 cursor-pointer"
+                      viewBox="0 0 20 20"
+                      fill="currentColor"
+                    >
+                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.15 3.535h3.717c.969 0 1.371 1.24.588 1.81l-3.005 2.18 1.15 3.536c.3.921-.755 1.688-1.539 1.105L10 13.011l-3.004 2.182c-.783.584-1.838-.184-1.539-1.105l1.15-3.536-3.004-2.18c-.783-.57-.38-1.81.588-1.81h3.717l1.15-3.535z" />
+                    </svg>
+                  </ng-container>
+                </div>
+                <div class="flex space-x-2">
+                  <button (click)="updateReview()" class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition">Update</button>
+                  <button (click)="cancelEdit()" class="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition">Cancel</button>
+                </div>
               </div>
             </div>
           </li>
         </ul>
-        <div *ngIf="reviews.length === 0" class="text-center text-lg text-gray-600">
+        <div *ngIf="reviews.length === 0" class="text-center text-lg text-gray-600 mt-6">
           No reviews found.
         </div>
       </div>

@@ -18,6 +18,9 @@ export class LikeService {
     return this.http.post<any>(this.apiUrl, { critic_id: criticId, user_id: userId });
   }
 
+  destoryLikesFromAReview(critic_id: number): Observable<any>{
+    return this.http.delete<any>(`${this.apiUrl}/critic/${critic_id}`);  }
+
   unlikeReview(criticId: string, userId: number): Observable<any> {
     return this.http.delete<any>(`${this.apiUrl}/${criticId}/${userId}`);
   }

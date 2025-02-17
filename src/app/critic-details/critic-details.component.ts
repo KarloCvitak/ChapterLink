@@ -45,12 +45,13 @@ export class CriticDetailsComponent implements OnInit {
 
   ngOnInit() {
     this.userId = this.authService.getCurrentUserId();
+    this.checkIfAdmin(this.userId);
     const criticId: number | null = Number(this.route.snapshot.paramMap.get('id'));
     if (criticId) {
       this.loadReviewDetails(criticId);
       this.loadComments(criticId);
       this.loadBookDetails(this.review.Book.google_books_id);
-      this.checkIfAdmin(this.userId);
+
 
     }
   }
@@ -94,14 +95,18 @@ export class CriticDetailsComponent implements OnInit {
         }
       });
     }
+
   }
 
-  deleteReview(criticId: number) {
-    this.criticService.deleteCritic(criticId).subscribe(response => {
-      if (response.status === 'OK') {
-        // Implement navigation or further actions after deletion
-      }
-    });
+
+  deleteReview(reviewId: number): void {
+    if (confirm('Are you sure you want to delete this review?')) {
+
+      this.likesService.destoryLikesFromAReview(reviewId).subscribe();
+      this.criticService.deleteCritic(reviewId).subscribe(
+        () =>   this.router.navigate(['',])
+      );
+    }
   }
 
   cancelEdit() {
@@ -209,5 +214,12 @@ export class CriticDetailsComponent implements OnInit {
   // Method to sort comments by created_at in descending order
   sortComments() {
     this.comments.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+  }
+
+  getUserInitials(username: string | null): string {
+    if (username) {
+      return username.slice(0, 2).toUpperCase();
+    }
+    return 'NA';  // Default value if username is null or empty
   }
 }

@@ -13,22 +13,23 @@ import {Router} from "@angular/router";
 })
 export class FeedComponent implements OnInit{
 
+
   reviews: any[] = [];
-  currentUserId: number | null = null; // Example: Replace with actual user ID
+  currentUserId: number | null = null;
   editingReview: any = null;
   userRoles: string[] = [];
-
   hoverState: any = {};
-
-  bookDetails: any = {}; // Assume this is populated elsewhere
+  bookDetails: any = {};
   isAdmin: boolean = false;
-  likesUserMap: { [criticId: number]: any[] } = {}; // Map to store users who liked
-
+  likesUserMap: { [criticId: number]: any[] } = {};
   likesCountMap: { [criticId: number]: number } = {};
   userLikesMap: { [criticId: number]: boolean } = {};
+
+
   constructor(private followingService: FollowingService, private authService: AuthService, private roleService : RoleService, private criticService: CriticService,
               private likesService: LikeService,
               private router: Router) { }
+
 
   ngOnInit(): void {
     this.currentUserId = this.authService.getCurrentUserId();
@@ -100,9 +101,12 @@ export class FeedComponent implements OnInit{
 
   deleteReview(reviewId: number): void {
     if (confirm('Are you sure you want to delete this review?')) {
+
+      this.likesService.destoryLikesFromAReview(reviewId).subscribe();
+
       this.criticService.deleteCritic(reviewId).subscribe(
         () => this.loadReviews(),
-        (error) => console.error('Error deleting review', error)
+        (error) => console.error('Error deleting review', error),
       );
     }
   }
@@ -138,6 +142,15 @@ export class FeedComponent implements OnInit{
     return review.user_id === this.currentUserId || this.userRoles.includes('Admin');
   }
 
+  getStarsArray(rating: number): number[] {
+    return Array(5).fill(0).map((_, index) => index < rating ? 1 : 0);
+  }
+  getUserInitials(username: string | null): string {
+    if (username) {
+      return username.slice(0, 2).toUpperCase();
+    }
+    return 'NA';  // Default value if username is null or empty
+  }
 
 }
 

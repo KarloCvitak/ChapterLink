@@ -46,17 +46,22 @@ export class SearchBarComponent implements OnDestroy {
   performSearch(query: string) {
     this.route.queryParams.subscribe(params => {
       query = params['q'] || query; // Use query from params or current input
-      this.searchService.searchBooks(query).subscribe(books => {
-        console.log('Books response:', books); // Log the entire response
-        if (books && Array.isArray(books.items)) {
-          this.books = books.items;
-        } else {
-          console.error('Error: books.items is not an array:', books);
-        }
-      }, error => {
-        console.error('Error fetching books:', error);
-      });
 
+      // If the query contains an underscore, skip the book search
+      if (!query.includes('_')) {
+        this.searchService.searchBooks(query).subscribe(books => {
+          console.log('Books response:', books); // Log the entire response
+          if (books && Array.isArray(books.items)) {
+            this.books = books.items;
+          } else {
+            console.error('Error: books.items is not an array:', books);
+          }
+        }, error => {
+          console.error('Error fetching books:', error);
+        });
+      }
+
+      // Always search for users
       this.searchService.searchUsers(query).subscribe(response => {
         console.log('Users response:', response); // Log the entire response
         if (response && Array.isArray(response.data)) {
@@ -68,6 +73,7 @@ export class SearchBarComponent implements OnDestroy {
         console.error('Error fetching users:', error);
       });
 
+      // Always search for lists
       this.searchService.searchLists(query).subscribe(response => {
         console.log('Lists response:', response); // Log the entire response
         if (response && Array.isArray(response.data)) {
@@ -82,7 +88,6 @@ export class SearchBarComponent implements OnDestroy {
       this.dropdownVisible = true; // Show the dropdown
     });
   }
-
   onEnter() {
     if (this.query.length > 2) {
       this.router.navigate(['/search'], { queryParams: { q: this.query } });

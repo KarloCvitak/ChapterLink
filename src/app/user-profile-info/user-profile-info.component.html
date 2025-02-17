@@ -1,6 +1,21 @@
 <div class="flex justify-start items-start p-6">
-  <div class="bg-white rounded-lg shadow-md p-6 w-72 max-w-full m-6">
+  <div class="bg-white rounded-lg shadow-md p-6 w-72 max-w-full m-6 relative">
+
+    <div *ngIf="isOwnProfile">
+    <!-- Gear Icon to Edit Username -->
+    <button (click)="toggleEdit()" class="absolute top-2 right-2 p-2 bg-gray-200 rounded-full focus:outline-none hover:bg-gray-300">
+      <i class="fas fa-cog text-gray-600"></i>
+    </button>
+    </div>
+
+    <!-- User Profile Info -->
     <div class="flex flex-col items-center justify-between mb-4">
+      <div class="flex-shrink-0">
+        <div class="h-10 w-10 bg-blue-500 rounded-full flex items-center justify-center text-white font-bold">
+          {{ getUserInitials(user.username) }}
+        </div>
+      </div>
+
       <h2 class="text-2xl font-extrabold text-primary-dark">{{ user.username }}</h2>
       <p class="text-base text-gray-900 mb-2 text-center">Followers: {{ user.followersCount }}</p>
       <div *ngIf="!isOwnProfile">
@@ -11,7 +26,21 @@
           Unfollow
         </button>
       </div>
+    </div>
 
+    <!-- Hidden Form for Updating Username -->
+    <div *ngIf="isEditing" class="mt-4 p-4 bg-gray-100 rounded-lg shadow-md">
+      <h3 class="text-lg font-semibold mb-2">Update Username</h3>
+      <form (ngSubmit)="updateUsername()">
+        <label class="block text-sm font-medium text-gray-700 mb-2" for="newUsername">New Username</label>
+        <input [(ngModel)]="newUsername" id="newUsername" name="newUsername" type="text" class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary sm:text-sm" required>
+        <button type="submit" class="mt-2 mr-1 py-1 px-3 bg-blue-500 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+          Update
+        </button>
+        <button (click)="toggleEdit(false)" type="button" class="mt-2 py-1 px-3 bg-red-500 text-white rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
+          Cancel
+        </button>
+      </form>
     </div>
   </div>
 </div>

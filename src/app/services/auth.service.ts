@@ -2,6 +2,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, BehaviorSubject } from 'rxjs';
+import {ENDPOINT} from "../url_constants/urlConstants";
 
 @Injectable({
   providedIn: 'root'
@@ -13,18 +14,22 @@ export class AuthService {
   constructor(private http: HttpClient) { }
 
   login(credentials: any): Observable<any> {
-    return this.http.post(`${this.baseUrl}/authenticate/login`, credentials);
+    return this.http.post(ENDPOINT.LOGIN, credentials);
   }
-
 
   register(user: any): Observable<any> {
-    return this.http.post(`${this.baseUrl}/authenticate/register`, user);
+    return this.http.post(ENDPOINT.REGISTER, user);
   }
 
+
+  // why is this in auth service?
+  // TODO Move to user.service
   checkUsernameEmail(username: string, email: string): Observable<any> {
     return this.http.post(`${this.baseUrl}/authenticate/check-username-email`, { username, email });
   }
 
+  //why is this in auth service?
+  //use uses token stuff it can stay in auth
   getCurrentUserId(): number | null {
     const token = localStorage.getItem('token');
     console.log("getCurrentUserId() token:", token);
@@ -65,10 +70,12 @@ export class AuthService {
     this.authState.next(false);
   }
 
+  // TODO move to token-service
   isLoggedIn(): boolean {
     return !!this.getToken();
   }
 
+  //not used, what is its purpose?
   getAuthState(): Observable<boolean> {
     return this.authState.asObservable();
   }

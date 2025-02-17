@@ -62,8 +62,12 @@
           (click)="onSelectItem(list)"
           class="cursor-pointer hover:bg-gray-100 p-2 rounded"
         >
+          <a [routerLink]="['/custom-lists', list.list_id]" class="flex items-start">
+
           <p class="font-medium text-gray-800">{{ list.title }}</p>
           <p class="text-sm text-gray-600">{{ list.DESCRIPTION }}</p>
+            </a>
+
         </li>
       </ul>
     </div>

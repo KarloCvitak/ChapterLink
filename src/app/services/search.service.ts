@@ -17,7 +17,7 @@ export class SearchService {
     return this.http.get<any>(`${this.baseUrl}/search/users?q=${query}`);
   }
   searchBooks(query: string): Observable<any> {
-    const url = `${this.googleBooksUrl}?q=${query}&key=${this.apiKey}&maxResults=25`;
+    const url = `${this.googleBooksUrl}?q=${query}&key=${this.apiKey}&maxResults=35`;
     return this.http.get(url);
   }
 

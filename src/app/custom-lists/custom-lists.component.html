@@ -6,6 +6,11 @@
     <!-- Display List Information -->
     <div *ngIf="list" class="list-info mb-6">
       <h1 class="text-3xl font-bold mb-4 text-center">{{ list.title }}</h1>
+
+      <p class="text-lg text-gray-400">{{ list.created_at }}</p>
+
+      <p class="text-lg text-gray-400">created by: {{ user.username }}</p>
+
       <p class="text-lg text-gray-700">{{ list.description }}</p>
     </div>
 

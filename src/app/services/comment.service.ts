@@ -11,19 +11,18 @@ export class CommentService {
 
   constructor(private http: HttpClient) { }
 
-  getCommentsForReview(critic_id: number): Observable<any> {
-    return this.http.get(`${this.baseUrl}/critics/${critic_id}`);
-  }
-
   addComment(commentData: any): Observable<any> {
     return this.http.post(this.baseUrl, commentData);
   }
-
+  getCommentsForReview(critic_id: number): Observable<any> {
+    return this.http.get(`${this.baseUrl}/critics/${critic_id}`);
+  }
   updateComment(commentId: number, commentData: any): Observable<any> {
     return this.http.put(`${this.baseUrl}/${commentId}`, commentData);
   }
-
   deleteComment(commentId: number): Observable<any> {
     return this.http.delete(`${this.baseUrl}/${commentId}`);
   }
 }
+
+

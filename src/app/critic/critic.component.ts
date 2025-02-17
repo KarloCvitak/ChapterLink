@@ -6,6 +6,7 @@ import { UserBookService } from '../services/user-book.service';
 import { SearchService } from "../services/search.service";
 import { LikeService } from "../services/like.service";
 import {Router} from "@angular/router";
+import {RoleService} from "../services/role.service";
 
 @Component({
   selector: 'app-critic',
@@ -19,7 +20,7 @@ export class CriticComponent implements OnInit {
   newCritic = { rating: 0, review_text: '' };
   book: any;
   currentStatus: number | null = null;
-
+  isAdmin: boolean = false;
   likesCountMap: { [criticId: number]: number } = {};
   userLikesMap: { [criticId: number]: boolean } = {};
   likesUserMap: { [criticId: number]: any[] } = {}; // Map to store users who liked
@@ -32,12 +33,19 @@ export class CriticComponent implements OnInit {
     private searchService: SearchService,
     private likeService: LikeService,
     private bookService: UserBookService,
-    private router: Router
+    private router: Router,
+    private roleService: RoleService
   ) {}
 
+  getUserInitials(username: string | null): string {
+    if (username) {
+      return username.slice(0, 2).toUpperCase();
+    }
+    return 'NA';  // Default value if username is null or empty
+  }
   ngOnInit() {
     this.userId = this.authService.getCurrentUserId();
-
+    this.checkIfAdmin(this.userId);
     this.searchService.searchBookById(this.bookId).subscribe(book => {
       this.book = book;
       this.loadCritics();
@@ -46,6 +54,13 @@ export class CriticComponent implements OnInit {
       }
     });
   }
+
+  checkIfAdmin(userId: number | null): void {
+    this.roleService.getUserRoles(userId).subscribe(response => {
+      this.isAdmin = response.roles.some((role: any) => role.role_name === 'Admin');
+    });
+  }
+
 
   viewReviewDetails(criticId: number) {
     this.router.navigate([`/review/${criticId}`]);
@@ -92,17 +107,24 @@ export class CriticComponent implements OnInit {
   loadCritics() {
     this.criticService.getCriticsForBookByGoogleID(this.book.id).subscribe(response => {
       if (response.status === 'OK') {
-        this.critics = response.reviews.map((critic: any) => ({
-          ...critic,
-          editMode: false,
-          editCriticData: { ...critic }
-        }));
+        this.critics = response.reviews
+          .map((critic: any) => ({
+            ...critic,
+            editMode: false,
+            editCriticData: { ...critic }
+          }))
+          // Sort critics by created_at date
+          .sort((a: { created_at: string }, b: { created_at: string }) =>
+            new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+          );
 
         // Fetch likes for each critic
         this.critics.forEach(critic => this.getLikes(critic.critic_id));
       }
     });
   }
+
+
 
   addCritic() {
     if (this.userId && this.bookId) {

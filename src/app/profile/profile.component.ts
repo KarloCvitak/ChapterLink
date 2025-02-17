@@ -23,6 +23,7 @@ export class ProfileComponent implements OnInit {
   reviews: any[] = [];
   editingReview: any = null;
   bookDetails: any = {}; // To store book details
+  user: any = {};
 
   likesCountMap: { [criticId: number]: number } = {};
   userLikesMap: { [criticId: number]: boolean } = {};
@@ -58,10 +59,23 @@ export class ProfileComponent implements OnInit {
 
 
       if (this.userId) {
+        this.getUserProfile();
         this.filterBooks(1); // Default to Currently Reading
         this.loadUserReviews(); // Load user reviews
         this.checkIfAdmin(this.currentUserId);
       }
+    });
+  }
+
+  getUserProfile(): void {
+    this.userService.getUserById(this.userId).subscribe(response => {
+      if (response.status === 'OK') {
+        this.user = response.user;
+      } else {
+        console.error('Error fetching user profile:', response);
+      }
+    }, error => {
+      console.error('HTTP error fetching user profile:', error);
     });
   }
 
@@ -185,12 +199,16 @@ export class ProfileComponent implements OnInit {
     }
   }
 
-  deleteReview(criticId: number) {
-    this.criticService.deleteCritic(criticId).subscribe(response => {
-      if (response.status === 'OK') {
-        this.loadUserReviews();
-      }
-    });
+  deleteReview(reviewId: number): void {
+    if (confirm('Are you sure you want to delete this review?')) {
+
+      this.likesService.destoryLikesFromAReview(reviewId).subscribe();
+
+      this.criticService.deleteCritic(reviewId).subscribe(
+        () => this.loadUserReviews(),
+        (error) => console.error('Error deleting review', error),
+      );
+    }
   }
 
   cancelEdit() {
@@ -206,4 +224,15 @@ export class ProfileComponent implements OnInit {
       this.lists = this.lists.filter(list => list.list_id !== list_id);
     });
   }
+
+  getStarsArray(rating: number): number[] {
+    return Array(5).fill(0).map((_, index) => index < rating ? 1 : 0);
+  }
+  getUserInitials(username: string | null): string {
+    if (username) {
+      return username.slice(0, 2).toUpperCase();
+    }
+    return 'NA';  // Default value if username is null or empty
+  }
+
 }
