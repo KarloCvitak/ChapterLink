@@ -1,5 +1,5 @@
 import {Injectable} from "@angular/core";
-import {TokenPayload} from "../../../auth-interfaces/TokenPayload";
+import {TokenPayload} from "../../auth-interfaces/TokenPayload";
 
 @Injectable({
   providedIn: 'root'
